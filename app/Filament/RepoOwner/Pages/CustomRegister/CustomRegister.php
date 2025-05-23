@@ -46,12 +46,12 @@ class CustomRegister extends Login
                 ->password()
                 ->required(),
 
-            // Optional: Uncomment this to confirm password
-            // TextInput::make('password_confirmation')
-            //     ->label('Confirm Password')
-            //     ->password()
-            //     ->same('password')
-            //     ->required(),
+            
+             TextInput::make('password_confirmation')
+                 ->label('Confirm Password')
+                 ->password()
+                 ->same('password')
+                 ->required(),
         ]);
     }
 
