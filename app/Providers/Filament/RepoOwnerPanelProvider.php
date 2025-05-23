@@ -23,10 +23,16 @@ class RepoOwnerPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->default()
             ->id('repoOwner')
-            ->path('repoOwner')
+            ->path('repo-Owner')
+            ->registration()
+            ->login()
+            ->passwordReset()
+            ->profile()
+
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Cyan,
             ])
             ->discoverResources(in: app_path('Filament/RepoOwner/Resources'), for: 'App\\Filament\\RepoOwner\\Resources')
             ->discoverPages(in: app_path('Filament/RepoOwner/Pages'), for: 'App\\Filament\\RepoOwner\\Pages')
