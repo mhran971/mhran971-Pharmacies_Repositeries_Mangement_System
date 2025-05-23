@@ -31,8 +31,10 @@ class RepoOwnerPanelProvider extends PanelProvider
             ->login()
             ->passwordReset()
             ->profile()
-
-            ->colors([
+            ->font('cairo')
+            ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('120px')
+        ->colors([
                 'primary' => Color::Cyan,
             ])
             ->discoverResources(in: app_path('Filament/RepoOwner/Resources'), for: 'App\\Filament\\RepoOwner\\Resources')

@@ -46,12 +46,12 @@ class CustomRegister extends Login
                 ->password()
                 ->required(),
 
-            // Optional: Uncomment this to confirm password
-            // TextInput::make('password_confirmation')
-            //     ->label('Confirm Password')
-            //     ->password()
-            //     ->same('password')
-            //     ->required(),
+
+             TextInput::make('password_confirmation')
+                 ->label('Confirm Password')
+                 ->password()
+                 ->same('password')
+                 ->required(),
         ]);
     }
 
@@ -83,11 +83,11 @@ class CustomRegister extends Login
     }
 
 
-    protected function getCredentialsFromFormData(array $data): array
-    {
-        return [
-            'email'    => $data['email'],
-            'password' => $data['password'],
-        ];
-    }
+//    protected function getCredentialsFromFormData(array $data): array
+//    {
+//        return [
+//            'email'    => $data['email'],
+//            'password' => $data['password'],
+//        ];
+//    }
 }
