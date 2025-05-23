@@ -75,7 +75,7 @@ class CustomRegister extends Login
             'repository_name'    => $data['repository_name'],
             'repository_phone'   => $data['repository_phone'],
             'repository_address' => $data['repository_address'],
-            'owner_id'           => $user->id,
+            'owner_id'           => $user->id, // This is critical!
         ]);
 
         // Step 4: Return the login response
@@ -83,11 +83,11 @@ class CustomRegister extends Login
     }
 
 
-//    protected function getCredentialsFromFormData(array $data): array
-//    {
-//        return [
-//            'email'    => $data['email'],
-//            'password' => $data['password'],
-//        ];
-//    }
+    protected function getCredentialsFromFormData(array $data): array
+    {
+        return [
+            'email'    => $data['email'],
+            'password' => $data['password'],
+        ];
+    }
 }
