@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Providers\Filament\RepoOwnerPanelProvider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -54,4 +55,9 @@ class User extends Authenticatable
     {
       return  $this->hasOne(Repository::class);
     }
+    public function RepositoriesEmployee():HasMany
+    {
+        return $this->hasMany(Repository::class);
+    }
+
 }
