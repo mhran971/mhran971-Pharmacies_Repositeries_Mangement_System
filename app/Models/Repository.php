@@ -12,4 +12,10 @@ class Repository extends Model
         'repository_address',
         'owner_id'
     ];
+
+
+    public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(User::class);
+    }
 }
