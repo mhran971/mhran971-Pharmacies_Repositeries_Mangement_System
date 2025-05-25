@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('repository__users', function (Blueprint $table) {
+        Schema::create('repository_users', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->constrained('users')->ondelete('cascade')->onupdate('cascade');
             $table->unsignedBigInteger('repository_id')->constrained('repositories')->ondelete('cascade')->onupdate('cascade');
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('repository__users');
+        Schema::dropIfExists('repository_users');
     }
 };

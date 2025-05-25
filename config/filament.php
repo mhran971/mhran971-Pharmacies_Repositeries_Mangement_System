@@ -13,12 +13,10 @@ return [
     | This will allow your users to receive real-time notifications.
     |
     */
-//    'auth' => [
-//        'enable_registration' => true, // تأكد من تفعيل التسجيل
-//        'pages' => [
-//            'register' => App\Filament\RepoOwner\Pages\CustomRegister::class, // الصفحة المخصصة
-//        ],
-//    ],
+    'auth' => [
+        'guard' => 'web',
+    ],
+
 
     'broadcasting' => [
 
