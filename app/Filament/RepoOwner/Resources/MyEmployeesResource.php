@@ -18,6 +18,7 @@ class MyEmployeesResource extends Resource
 {
     protected static ?string $model = Repository_User::class;
     protected static ?string $navigationLabel = 'My Employees';
+    protected static ?string $modelLabel = 'My Employees';
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 

@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class  Permission extends Model
 {
-    protected $table = 'permission';
+    protected $table = 'permissions';
 
     protected $fillable = [
-        'name',
+        'name_en',
+        'name_ar',
 
     ];
 
