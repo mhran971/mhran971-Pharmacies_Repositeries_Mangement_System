@@ -35,7 +35,7 @@ class PermissionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->extraAttributes(['class' => 'bg-blue-50']) // تغيير خلفية الجدول
+//            ->extraAttributes(['class' => 'bg-blue-50']) // تغيير خلفية الجدول
             ->columns([
                 Tables\Columns\TextColumn::make('name_en')
                     ->label('Permissions')
