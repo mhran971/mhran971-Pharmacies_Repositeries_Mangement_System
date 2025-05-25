@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Repository extends Model
 {
-    protected $fillable =[
+    protected $fillable = [
         'repository_name',
         'repository_phone',
         'repository_address',
@@ -16,6 +16,6 @@ class Repository extends Model
 
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(User::class,'repository_users');
+        return $this->belongsToMany(User::class, 'repository_users');
     }
 }
