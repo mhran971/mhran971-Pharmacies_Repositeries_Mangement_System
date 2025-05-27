@@ -18,6 +18,11 @@ class PermissionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
 
+    public static function canViewAny(): bool
+    {
+        return auth()->check() && auth()->user()->email === 'adminMahran@email.com';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -35,7 +40,6 @@ class PermissionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-//            ->extraAttributes(['class' => 'bg-blue-50']) // تغيير خلفية الجدول
             ->columns([
                 Tables\Columns\TextColumn::make('name_en')
                     ->label('Permissions')

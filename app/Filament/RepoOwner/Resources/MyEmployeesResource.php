@@ -42,7 +42,7 @@ class MyEmployeesResource extends Resource
                     ->label('Access Employee Name:')
                     ->relationship('user', 'name')
                     ->searchable()
-                    ->autofocus(),
+                    ->autofocus()->required(),
 
                 Forms\Components\MultiSelect::make('user_repo_permission')
                     ->label('Permissions')
