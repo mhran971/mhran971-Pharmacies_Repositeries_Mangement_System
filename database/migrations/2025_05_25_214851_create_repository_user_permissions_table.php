@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('repository_user_permissions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('permission_id')->constrained('permission')->cascadeondelete()->casecadeonupdate();
-            $table->unsignedBigInteger('Repository_User_id')->constrained('Repository_User')->cascadeondelete()->casecadeonupdate();
+            $table->unsignedBigInteger('permission_id');
+            $table->unsignedBigInteger('repository_user_id');
             $table->timestamps();
+
+            $table->foreign('permission_id')->references('id')->on('permissions')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('repository_user_id')->references('id')->on('repository_users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

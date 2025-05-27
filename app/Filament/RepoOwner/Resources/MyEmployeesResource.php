@@ -4,6 +4,7 @@ namespace App\Filament\RepoOwner\Resources;
 
 use App\Filament\RepoOwner\Resources\MyEmployeesResource\Pages;
 use App\Filament\RepoOwner\Resources\MyEmployeesResource\RelationManagers;
+use App\Filament\RepoOwner\Resources\PermissionsResource\RelationManagers\UserRepoPermissionRelationManager;
 use App\Models\MyEmployees;
 use App\Models\Repository_User;
 use Filament\Forms;
@@ -38,12 +39,18 @@ class MyEmployeesResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->label('Employee Name')
+                    ->label('Access Employee Name:')
                     ->relationship('user', 'name')
                     ->searchable()
+                    ->autofocus(),
+
+                Forms\Components\MultiSelect::make('user_repo_permission')
+                    ->label('Permissions')
+                    ->relationship('user_repo_permission', 'name_en')
                     ->preload()
-
-
+                    ->required(),
+                Forms\Components\TextInput::make('role')
+                    ->required(),
             ]);
     }
 
@@ -62,7 +69,7 @@ class MyEmployeesResource extends Resource
                         'admin' => 'danger',
                         'editor' => 'success',
                         'viewer' => 'info',
-                        default => 'gray',
+                        default => 'primary',
                     })
 
 
@@ -83,7 +90,7 @@ class MyEmployeesResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            UserRepoPermissionRelationManager::class
         ];
     }
 

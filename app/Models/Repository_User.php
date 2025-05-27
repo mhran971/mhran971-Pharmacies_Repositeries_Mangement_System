@@ -27,6 +27,9 @@ class Repository_User extends Model
 
     public function user_repo_permission(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany('permissions');
+        return $this->belongsToMany(\App\Models\Permission::class,
+            'repository_user_permissions',
+            'repository_user_id',
+            'permission_id');
     }
 }

@@ -11,11 +11,15 @@ class  Permission extends Model
     protected $fillable = [
         'name_en',
         'name_ar',
-
     ];
 
-    public function permission_user_repo()
+    public function permission_user_repo(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany('repository_users');
+        return $this->belongsToMany(\App\Models\Repository_User::class, 'repository_user_permissions', 'permission_id', 'repository_user_id');
+    }
+
+    public function repositoryUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(\App\Models\Repository_User::class, 'repository_user_permissions', 'permission_id', 'repository_user_id');
     }
 }
