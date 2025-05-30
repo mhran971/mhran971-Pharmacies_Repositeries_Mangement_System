@@ -23,11 +23,11 @@ class Pharmacy_OwnerRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20|unique:users,phone_number',
+            'phone_number' => 'required|numeric|digits:10|unique:users,phone_number',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'pharmacy_name' => 'required|string|max:255',
-            'pharmacy_phone' => 'required|string|max:20',
+            'pharmacy_phone' => 'required|numeric|digits:10',
             'pharmacy_address' => 'required|string|max:255',
         ];
     }

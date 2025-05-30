@@ -23,7 +23,7 @@ class PharmacistRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20|unique:users,phone_number',
+            'phone_number' => 'required|numeric|digits:10|unique:users,phone_number',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'pharmacy_id' => 'required|id',
