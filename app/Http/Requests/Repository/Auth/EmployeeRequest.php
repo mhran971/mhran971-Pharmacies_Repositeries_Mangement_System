@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Repository\Auth;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EmployeeRequest extends FormRequest
@@ -17,7 +18,7 @@ class EmployeeRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -26,8 +27,7 @@ class EmployeeRequest extends FormRequest
             'phone_number' => 'required|numeric|digits:10|unique:users,phone_number',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'repository_id' => 'required|id',
-
+            'repository_id' => 'required|exists:repositories,id',
         ];
     }
 
