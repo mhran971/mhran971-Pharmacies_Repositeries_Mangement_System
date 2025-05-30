@@ -11,7 +11,8 @@ class Repository_User extends Model
     protected $fillable =[
         'repository_id',
         'user_id',
-        'role'
+        'role',
+        'active'
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
