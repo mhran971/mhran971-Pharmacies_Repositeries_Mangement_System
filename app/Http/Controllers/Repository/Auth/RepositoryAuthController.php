@@ -8,7 +8,7 @@ use App\Http\Requests\Repository\Auth\Repo_OwnerRequest;
 use App\Services\Repository\Auth\AuthService;
 
 
-class AuthController extends BaseController
+class RepositoryAuthController extends BaseController
 {
     protected AuthService $authService;
 

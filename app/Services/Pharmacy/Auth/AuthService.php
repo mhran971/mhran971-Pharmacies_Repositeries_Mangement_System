@@ -14,51 +14,63 @@ class AuthService
 {
     public function Pharmacy_Owner_register(Pharmacy_OwnerRequest $request)
     {
-        $user = User::create([
-            'name' => $request->name,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        $pharmacy = Pharmacy::create([
-            'pharmacy_name' => $request->pharmacy_name,
-            'pharmacy_phone' => $request->pharmacy_phone,
-            'pharmacy_address' => $request->pharmacy_address,
-            'owner_id' => $user->id,
-        ]);
+            $pharmacy = Pharmacy::create([
+                'pharmacy_name' => $request->pharmacy_name,
+                'pharmacy_phone' => $request->pharmacy_phone,
+                'pharmacy_address' => $request->pharmacy_address,
+                'owner_id' => $user->id,
+            ]);
 
-        $token = JWTAuth::fromUser($user);
-        return [
-            'user' => $user,
-            'authorization' => [
-                'token' => $token,
-                'type' => 'bearer'
-            ],
-            'pharmacy' => $pharmacy
-        ];
+            $token = JWTAuth::fromUser($user);
+            User::query()->where('id', $user->id)->update(['token' => $token]);
+
+
+            return [
+                'user' => $user,
+                'authorization' => [
+                    'token' => $token,
+                    'type' => 'bearer'
+                ],
+                'pharmacy' => $pharmacy
+            ];
+        } catch (\Exception $exception) {
+            return response()->json(['error' => 'Registration failed', 'message' => $exception->getMessage()], 500);
+        }
     }
 
     public function Pharmacist_register(PharmacistRequest $request)
     {
-        $user = User::create([
-            'name' => $request->name,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        $pharmacy = Pharmacy::find($request->pharmacy_id);
-        $pharmacy->pharmacists()->attach($user->id);
+            $pharmacy = Pharmacy::find($request->pharmacy_id);
+            $pharmacy->pharmacists()->attach($user->id);
+            $token = JWTAuth::fromUser($user);
+            User::query()->where('id', $user->id)->update(['token' => $token]);
 
-        $token = JWTAuth::fromUser($user);
-        return [
-            'user' => $user,
-            'authorization' => [
-                'token' => $token,
-                'type' => 'bearer'
-            ],
-            'pharmacy' => $pharmacy
-        ];
+            return [
+                'user' => $user,
+                'authorization' => [
+                    'token' => $token,
+                    'type' => 'bearer'
+                ],
+                'pharmacy' => $pharmacy
+            ];
+        } catch (\Exception $exception) {
+            return response()->json(['error' => 'Registration failed', 'message' => $exception->getMessage()], 500);
+        }
     }
 }

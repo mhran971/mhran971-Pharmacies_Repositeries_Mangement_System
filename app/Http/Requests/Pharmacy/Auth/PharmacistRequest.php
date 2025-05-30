@@ -26,7 +26,7 @@ class PharmacistRequest extends FormRequest
             'phone_number' => 'required|numeric|digits:10|unique:users,phone_number',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'pharmacy_id' => 'required|id',
+            'pharmacy_id' => 'required|Exists:pharmacies,id',
 
         ];
     }

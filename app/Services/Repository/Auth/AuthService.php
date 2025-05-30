@@ -30,6 +30,8 @@ class AuthService
             ]);
 
             $token = JWTAuth::fromUser($user);
+            User::query()->where('id', $user->id)->update(['token' => $token]);
+
             return [
                 'user' => $user,
                 'authorization' => [
@@ -57,6 +59,8 @@ class AuthService
             $repository->Employees()->attach($user->id);
 
             $token = JWTAuth::fromUser($user);
+            User::query()->where('id', $user->id)->update(['token' => $token]);
+
             return [
                 'user' => $user,
                 'authorization' => [
