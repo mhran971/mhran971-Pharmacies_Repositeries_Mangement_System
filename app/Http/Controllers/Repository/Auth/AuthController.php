@@ -7,6 +7,7 @@ use App\Http\Requests\Repository\Auth\EmployeeRequest;
 use App\Http\Requests\Repository\Auth\Repo_OwnerRequest;
 use App\Services\Repository\Auth\AuthService;
 
+
 class AuthController extends BaseController
 {
     protected AuthService $authService;
@@ -20,8 +21,8 @@ class AuthController extends BaseController
     {
         $data = $this->authService->Repo_Owner_register($request);
 
-        if (!empty($data->getErrors()) && !$data) {
-            return response()->json($request->getErrors(), 'failed', 406);
+        if (empty($data)) {
+            return response()->json(['error' => 'Registration failed'], 406);
         }
         return $this->SendResponse($data, 'Success', 200);
 
@@ -31,8 +32,8 @@ class AuthController extends BaseController
     {
         $data = $this->authService->Employee_register($request);
 
-        if (!empty($data->getErrors()) && !$data) {
-            return response()->json($request->getErrors(), 'failed', 406);
+        if (empty($data)) {
+            return response()->json(['error' => 'Registration failed'], 406);
         }
         return $this->SendResponse($data, 'Success', 200);
 

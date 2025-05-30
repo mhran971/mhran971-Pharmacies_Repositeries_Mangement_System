@@ -14,7 +14,7 @@ class Repository extends Model
     ];
 
 
-    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function Employees(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class, 'repository_users');
     }

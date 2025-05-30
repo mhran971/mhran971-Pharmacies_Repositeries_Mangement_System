@@ -6,8 +6,8 @@ use App\Http\Requests\Pharmacy\Auth\PharmacistRequest;
 use App\Http\Requests\Pharmacy\Auth\Pharmacy_OwnerRequest;
 use App\Models\Pharmacy;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class AuthService
@@ -28,9 +28,13 @@ class AuthService
             'owner_id' => $user->id,
         ]);
 
-        Auth::login($user);
+        $token = JWTAuth::fromUser($user);
         return [
             'user' => $user,
+            'authorization' => [
+                'token' => $token,
+                'type' => 'bearer'
+            ],
             'pharmacy' => $pharmacy
         ];
     }
@@ -47,9 +51,13 @@ class AuthService
         $pharmacy = Pharmacy::find($request->pharmacy_id);
         $pharmacy->pharmacists()->attach($user->id);
 
-        Auth::login($user);
+        $token = JWTAuth::fromUser($user);
         return [
             'user' => $user,
+            'authorization' => [
+                'token' => $token,
+                'type' => 'bearer'
+            ],
             'pharmacy' => $pharmacy
         ];
     }
