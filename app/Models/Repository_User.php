@@ -12,7 +12,7 @@ class Repository_User extends Model
         'repository_id',
         'user_id',
         'role',
-        'active'
+        'is_work'
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo

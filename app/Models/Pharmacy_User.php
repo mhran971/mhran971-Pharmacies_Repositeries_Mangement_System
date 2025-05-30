@@ -12,7 +12,7 @@ class Pharmacy_User extends Model
         'pharmacy_id',
         'user_id',
         'role',
-        'active'
+        'is_work'
     ];
 
 
