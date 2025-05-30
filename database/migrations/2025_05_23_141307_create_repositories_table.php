@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('repository_name')->reqiured();
             $table->string('repository_phone')->reqiured();
             $table->string('repository_address')->reqiured();
-            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

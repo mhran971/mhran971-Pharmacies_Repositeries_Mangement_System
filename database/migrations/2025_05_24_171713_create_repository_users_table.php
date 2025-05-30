@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->constrained('users')->ondelete('cascade')->onupdate('cascade');
             $table->unsignedBigInteger('repository_id')->constrained('repositories')->ondelete('cascade')->onupdate('cascade');
             $table->string('role')->required()->default('viewer');
-            $table->boolean('is_work')->required()->default('false');
+            $table->boolean('is_work')->required()->default(false);
             $table->timestamps();
         });
     }

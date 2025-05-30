@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('pharmacy_name')->reqiured();
             $table->string('pharmacy_phone')->reqiured();
             $table->string('pharmacy_address')->reqiured();
-            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
