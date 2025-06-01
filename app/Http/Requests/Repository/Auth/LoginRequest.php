@@ -5,7 +5,7 @@ namespace App\Http\Requests\Repository\Auth;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class EmployeeRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,9 @@ class EmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'phone_number' => 'required|numeric|digits:10|unique:users,phone_number',
-            'email' => 'required|email|unique:users,email',
+            //'name' => 'required|string|max:255',
+            //  'phone_number' => 'required|numeric|digits:10|unique:users,phone_number',
+            'email' => 'required|email|',
             'password' => 'required|string|min:8|confirmed',
 //            'repository_id' => 'required|exists:repositories,id',
         ];

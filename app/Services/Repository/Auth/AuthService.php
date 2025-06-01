@@ -3,16 +3,18 @@
 namespace App\Services\Repository\Auth;
 
 use App\Http\Requests\Repository\Auth\EmployeeRequest;
+use App\Http\Requests\Repository\Auth\LoginRequest;
 use App\Http\Requests\Repository\Auth\Repo_OwnerRequest;
 use App\Models\Repository;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class AuthService
 {
-    public function Repo_Owner_register(Repo_OwnerRequest $request): array
+    public function Repo_Owner_register(Repo_OwnerRequest $request)
     {
         try {
             $user = User::create([
@@ -55,8 +57,8 @@ class AuthService
                 'password' => Hash::make($request->password),
             ]);
 
-            $repository = Repository::find($request->repository_id);
-            $repository->Employees()->attach($user->id);
+//            $repository = Repository::find($request->repository_id);
+//            $repository->Employees()->attach($user->id);
 
             $token = JWTAuth::fromUser($user);
             User::query()->where('id', $user->id)->update(['token' => $token]);
@@ -67,10 +69,42 @@ class AuthService
                     'token' => $token,
                     'type' => 'bearer'
                 ],
-                'repository' => $repository
+//                'repository' => $repository
             ];
         } catch (\Exception $exception) {
             return response()->json(['error' => 'Registration failed', 'message' => $exception->getMessage()], 500);
         }
+
+
     }
+
+    public function login(LoginRequest $request)
+    {
+        if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
+            return 'Unauthorized';
+        }
+
+        $user = Auth::user();
+        $user->update(['token' => $token]);
+
+        return [
+            'user' => $user,
+            'authorization' => [
+                'token' => $token,
+                'type' => 'bearer'
+            ]
+        ];
+    }
+
+    public function logout(): void
+    {
+        $user = JWTAuth::parseToken()->authenticate(); // أفضل من Auth::user()
+
+        if ($user) {
+            $user->update(['token' => null]);
+        }
+
+        JWTAuth::invalidate(JWTAuth::getToken());
+    }
+
 }

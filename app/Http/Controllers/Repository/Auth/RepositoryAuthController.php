@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Repository\Auth;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Repository\Auth\EmployeeRequest;
+use App\Http\Requests\Repository\Auth\LoginRequest;
 use App\Http\Requests\Repository\Auth\Repo_OwnerRequest;
 use App\Services\Repository\Auth\AuthService;
 
@@ -36,6 +37,25 @@ class RepositoryAuthController extends BaseController
             return response()->json(['error' => 'Registration failed'], 406);
         }
         return $this->SendResponse($data, 'Success', 200);
+
+    }
+
+    public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $data = $this->authService->login($request);
+
+        if (empty($data)) {
+            return response()->json(['error' => 'login failed'], 406);
+        }
+        return $this->SendResponse($data, 'Success', 200);
+
+    }
+
+    public function logout(): \Illuminate\Http\JsonResponse
+    {
+        $this->authService->logout();
+
+        return $this->SendResponse("logout successfully", 'Success', 200);
 
     }
 }
