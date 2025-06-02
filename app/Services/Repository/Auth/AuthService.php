@@ -81,7 +81,7 @@ class AuthService
     public function login(LoginRequest $request)
     {
         if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
-            return 'Unauthorized';
+            return 'user not founded';
         }
 
         $user = Auth::user();

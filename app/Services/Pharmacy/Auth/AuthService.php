@@ -69,7 +69,7 @@ class AuthService
                     'token' => $token,
                     'type' => 'bearer'
                 ],
-                'pharmacy' => $pharmacy
+//                'pharmacy' => $pharmacy
             ];
         } catch (\Exception $exception) {
             return response()->json(['error' => 'Registration failed', 'message' => $exception->getMessage()], 500);
@@ -79,7 +79,7 @@ class AuthService
     public function login(LoginRequest $request)
     {
         if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
-            return 'Unauthorized';
+            return 'user not founded';
         }
 
         $user = Auth::user();
