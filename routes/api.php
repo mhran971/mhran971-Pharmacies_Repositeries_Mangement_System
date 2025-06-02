@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Pharmacy\Auth\PharmacyAuthController;
+use App\Http\Controllers\Pharmacy\Profile\ProfileController;
 use App\Http\Controllers\Repository\Auth\RepositoryAuthController;
+use App\Http\Controllers\Repository\Profile\RepoProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*                =============================
@@ -20,6 +22,9 @@ Route::prefix('Repository')
 
 Route::prefix('Repository')->middleware('auth:api')->group(function () {
     Route::post('/logout', [RepositoryAuthController::class, 'logout']);
+    Route::post('/my-profile', [RepoProfileController::class, 'get_my_profile']);
+    Route::post('/update-profile', [RepoProfileController::class, 'edit_my_profile']);
+    Route::post('/delete-profile', [RepoProfileController::class, 'delete_my_profile']);
 });
 
 
@@ -36,7 +41,11 @@ Route::prefix('Pharmacy')
 
     });
 Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
-
+    Route::post('/logout', [RepositoryAuthController::class, 'logout']);
+    Route::get('/my-profile', [ProfileController::class, 'get_my_profile']);
+    Route::post('/my-profile', [ProfileController::class, 'get_my_profile']);
+    Route::post('/update-profile', [ProfileController::class, 'edit_my_profile']);
+    Route::post('/delete-profile', [ProfileController::class, 'delete_my_profile']);
 });
 
 
