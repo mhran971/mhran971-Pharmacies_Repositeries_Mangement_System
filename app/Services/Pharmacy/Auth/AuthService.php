@@ -58,8 +58,8 @@ class AuthService
                 'password' => Hash::make($request->password),
             ]);
 
-            $pharmacy = Pharmacy::find($request->pharmacy_id);
-            $pharmacy->pharmacists()->attach($user->id);
+//            $pharmacy = Pharmacy::find($request->pharmacy_id);
+//            $pharmacy->pharmacists()->attach($user->id);
             $token = JWTAuth::fromUser($user);
             User::query()->where('id', $user->id)->update(['token' => $token]);
 
