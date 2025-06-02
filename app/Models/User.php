@@ -60,6 +60,16 @@
             return $this->hasOne(Repository::class, 'owner_id');
         }
 
+        public function repoowner(): HasOne
+        {
+            return $this->hasOne(Repository::class, 'owner_id');
+        }
+
+        public function pharmacyowner(): HasOne
+        {
+            return $this->hasOne(Pharmacy::class, 'owner_id');
+        }
+
         /**
          * Get the identifier that will be stored in the subject claim of the JWT.
          *
