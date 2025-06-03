@@ -6,9 +6,7 @@ use App\Http\Requests\Repository\Authorization\Assign_PermissionRequest;
 use App\Models\Permission;
 use App\Models\Repository_User;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use SebastianBergmann\Diff\Chunk;
 
 
 class RepositoryAuthorizationService
@@ -20,6 +18,7 @@ class RepositoryAuthorizationService
         }
         if ($lang == 'en')
             $data = $en_data = Permission::all()->pluck('name_en');
+
         return $data;
     }
 public function get_users(): array
