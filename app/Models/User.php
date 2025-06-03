@@ -65,7 +65,7 @@
             return $this->hasOne(Repository::class, 'owner_id');
         }
 
-        public function pharmacyowner(): HasOne
+        public function pharmacy_owner(): HasOne
         {
             return $this->hasOne(Pharmacy::class, 'owner_id');
         }
