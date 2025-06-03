@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Pharmacy\Auth\PharmacyAuthController;
+use App\Http\Controllers\Pharmacy\Authorization\PharmacyAuthorizationController;
 use App\Http\Controllers\Pharmacy\Profile\ProfileController;
 use App\Http\Controllers\Repository\Auth\RepositoryAuthController;
+use App\Http\Controllers\Repository\Authorization\RepoAuthorizationController;
 use App\Http\Controllers\Repository\Profile\RepoProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,8 +27,15 @@ Route::prefix('Repository')->middleware('auth:api')->group(function () {
     Route::post('/my-profile', [RepoProfileController::class, 'get_my_profile']);
     Route::post('/update-profile', [RepoProfileController::class, 'edit_my_profile']);
     Route::post('/delete-profile', [RepoProfileController::class, 'delete_my_profile']);
+    Route::post('/assign-permissions/{user_id}', [RepoAuthorizationController::class, 'assign_permissions_user']);
+
 });
 
+Route::middleware(['auth:api'])->prefix('Repository')
+    ->controller(PharmacyAuthorizationController::class)->group(function () {
+        Route::get('/get-permissions/{lang}', 'get_all_permissions');
+
+    });
 
 /*                =============================
                   ||        Pharmacy         ||
@@ -43,9 +52,15 @@ Route::prefix('Pharmacy')
 Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
     Route::post('/logout', [RepositoryAuthController::class, 'logout']);
     Route::get('/my-profile', [ProfileController::class, 'get_my_profile']);
-    Route::post('/my-profile', [ProfileController::class, 'get_my_profile']);
     Route::post('/update-profile', [ProfileController::class, 'edit_my_profile']);
     Route::post('/delete-profile', [ProfileController::class, 'delete_my_profile']);
 });
 
+Route::middleware(['auth:api'])->prefix('Pharmacy')
+    ->controller(PharmacyAuthorizationController::class)->group(function () {
+        Route::get('/get-permissions/{lang}', 'get_all_permissions');
+        Route::post('/assign-permissions/{user_id}', 'assign_permissions_user');
+
+    });
+Route::middleware(['auth:api',])->post('/assign-permissions/{user_id}', [RepoAuthorizationController::class, 'assign_permissions_user']);
 

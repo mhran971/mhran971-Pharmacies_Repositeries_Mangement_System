@@ -28,7 +28,8 @@ class RepoProfileService
                 'password' => Hash::make($request->password),
             ]);
             return $data;
-        } else return "Sth got worng!!";
+        } else
+            return "Something got worng!!";
     }
 
     public function deleteProfile()
