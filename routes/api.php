@@ -35,7 +35,7 @@ Route::middleware(['auth:api'])->prefix('Repository')
     ->controller(PharmacyAuthorizationController::class)->group(function () {
         Route::get('/get-permissions/{lang}', 'get_all_permissions');
         Route::get('/all-users', 'get_all_users');
-        Route::post('/assign-permissions/{user_id}','assign_permissions_user');
+        Route::post('/assign-permissions/{user_id}', 'assign_permissions_user');
 
     });
 
