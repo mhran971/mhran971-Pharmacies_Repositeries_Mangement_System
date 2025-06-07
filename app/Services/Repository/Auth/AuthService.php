@@ -22,6 +22,7 @@ class AuthService
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'role_id' => 1,
             ]);
 
             $repository = Repository::create([
@@ -55,6 +56,7 @@ class AuthService
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'role_id' => 3
             ]);
 
 //            $repository = Repository::find($request->repository_id);

@@ -24,6 +24,7 @@
             'email',
             'phone_number',
             'password',
+            'role_id'
 
         ];
 

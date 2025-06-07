@@ -10,6 +10,7 @@ class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * @throws \Exception
      */
     public function run()
     {
@@ -18,6 +19,7 @@ class UserSeeder extends Seeder
                 'name' => fake()->name(),
                 'phone_number' => fake()->phoneNumber(),
                 'email' => fake()->unique()->safeEmail(),
+                'role_id' => random_int(1, 4),
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'token' => Str::random(10),

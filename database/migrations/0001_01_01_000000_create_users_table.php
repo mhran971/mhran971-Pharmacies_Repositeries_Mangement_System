@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->unsignedBigInteger('role_id')->consentrained('roles')->casecadeonUpdate()->casecade0nDelete();
             $table->text('token')->nullable();
             $table->timestamps();
         });
