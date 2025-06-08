@@ -26,7 +26,7 @@ class LoginRequest extends FormRequest
             //'name' => 'required|string|max:255',
             //  'phone_number' => 'required|numeric|digits:10|unique:users,phone_number',
             'email' => 'required|email|',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
 //            'repository_id' => 'required|exists:repositories,id',
         ];
     }
