@@ -6,7 +6,6 @@ use App\Http\Requests\Pharmacy\Authorization\Assign_PermissionRequest;
 use App\Models\Permission;
 use App\Models\Pharmacy_User;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PharmacyAuthorizationService
@@ -27,10 +26,10 @@ class PharmacyAuthorizationService
     {
 
         if ($lang == 'ar') {
-            $data = $ar_data = Permission::all()->pluck('name_ar');
+            $data = $ar_data = Permission::get(['id', 'name_ar']);
         }
         if ($lang == 'en')
-            $data = $en_data = Permission::all()->pluck('name_en');
+            $data = $en_data = Permission::get(['id', 'name_en']);
         return $data;
     }
     public function assign_permissions(int $user_id, Assign_PermissionRequest $request): \Illuminate\Http\JsonResponse|array
