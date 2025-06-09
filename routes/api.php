@@ -24,7 +24,7 @@ Route::prefix('Repository')
 
 Route::prefix('Repository')->middleware('auth:api')->group(function () {
     Route::post('/logout', [RepositoryAuthController::class, 'logout']);
-    Route::post('/my-profile', [RepoProfileController::class, 'get_my_profile']);
+    Route::get('/my-profile', [RepoProfileController::class, 'get_my_profile']);
     Route::post('/update-profile', [RepoProfileController::class, 'edit_my_profile']);
     Route::post('/delete-profile', [RepoProfileController::class, 'delete_my_profile']);
     Route::post('/assign-permissions/{user_id}', [RepoAuthorizationController::class, 'assign_permissions_user']);
