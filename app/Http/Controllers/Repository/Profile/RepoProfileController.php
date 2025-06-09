@@ -6,7 +6,6 @@ use App\Http\Controllers\BaseController;
 use App\Services\Repository\RepoProfile\RepoProfileService;
 use Illuminate\Http\Request;
 
-
 class RepoProfileController extends BaseController
 {
     protected RepoProfileService $repoProfileService;
