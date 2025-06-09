@@ -8,17 +8,22 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\Pharmacy\Auth\ForgotPasswordRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\PasswordResetCodeMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\VerificationCode;
 
 class ForgotPasswordController extends BaseController
 {
     public function forgotPassword(ForgotPasswordRequest $request){
+        $emailExist = User::where('email', $request->email)->first();
+        if(!$emailExist){
+            return response()->json(['error' => 'Invalid code'], 422);
+        }
         $code = mt_rand(100000, 999999);
         $user = VerificationCode::updateOrCreate(
             ['email' => $request->email],
-            ['code' => $request->code,
-                'created_at' => now()]
+            ['code' => $code,
+             'created_at' => now()]
         );
 
         Mail::to($request->email)
@@ -38,7 +43,7 @@ class ForgotPasswordController extends BaseController
         if (!$record) {
             return response()->json(['error' => 'Invalid code'], 422);
         }
-        if ($record->created_at->addMinutes(5)->isPast()) {
+        if ($record->updated_at->addMinutes(185)->isPast()) {
             return response()->json(['error' => 'Code expired'], 422);
         }
 
@@ -49,7 +54,7 @@ class ForgotPasswordController extends BaseController
 
     public function resetPassword(Request $request){
         $validated = $request->validate([
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|exists:users,email',
             'password' => 'required|string|min:8|confirmed'
         ]);
         if ($validated){
