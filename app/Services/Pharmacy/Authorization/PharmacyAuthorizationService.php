@@ -59,7 +59,7 @@ class PharmacyAuthorizationService
         $pharmacy_user->refresh();
 
         if ($pharmacy_user && is_array($permissions)) {
-            $pharmacy_user->user_pharmacy_permission()->sync($permissions);
+            $pharmacy_user->user_pharmacy_permissions()->sync($permissions);
         }
 
         $permission_names = Permission::whereIn('id', $permissions)->get(['name_en', 'name_ar']);

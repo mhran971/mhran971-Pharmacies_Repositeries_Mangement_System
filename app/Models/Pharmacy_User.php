@@ -26,11 +26,12 @@ class Pharmacy_User extends Model
     {
         return $this->belongsTo(Pharmacy::class);
     }
-    public function user_pharmacy_permission(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+
+    public function user_pharmacy_permissions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Permission::class,
-            'repository_user_permissions',
-            'repository_user_id',
+            'pharmacy_user_permissions',
+            'pharmacy_user_id',
             'permission_id');
     }
 }
