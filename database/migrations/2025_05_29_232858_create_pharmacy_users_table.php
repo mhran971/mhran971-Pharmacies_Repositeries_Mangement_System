@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id')->constrained('users')->ondelete('cascade')->onupdate('cascade');
             $table->unsignedBigInteger('pharmacy_id')->constrained('pharmacies')->ondelete('cascade')->onupdate('cascade');
-            $table->integer('role_id')->required();
+            $table->text('role')->required();
             $table->boolean('is_work')->required()->default(false);
             $table->timestamps();
         });
