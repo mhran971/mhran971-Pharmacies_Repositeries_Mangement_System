@@ -2,9 +2,10 @@
 
 namespace App\Services\Repository\Authorization;
 
+use App\Http\Requests\Repository\Authorization\Assign_PermissionRequest;
 use App\Models\Permission;
 use App\Models\Repository_User;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -17,10 +18,23 @@ class RepositoryAuthorizationService
         }
         if ($lang == 'en')
             $data = $en_data = Permission::all()->pluck('name_en');
+
         return $data;
     }
+public function get_users(): array
+{
+        $allUsers = [];
 
-    public function assign_permissions(int $user_id, Request $request)
+        User::chunk(100, function ($usersChunk) use (&$allUsers) {
+            foreach ($usersChunk as $user) {
+                $allUsers[] = $user->name;
+            }
+        });
+
+        return $allUsers;
+    }
+
+    public function assign_permissions(int $user_id, Assign_PermissionRequest $request)
     {
         $permissions = is_array($request->input('permissions'))
             ? $request->input('permissions')
@@ -30,10 +44,10 @@ class RepositoryAuthorizationService
         if (!$owner)
             return response()->json(['error' => 'no owner founded'], 401);
 
-//        $repo = $owner->owner->id;
+        $repo = $owner->owner->id;
 
         $repo_user = Repository_User::firstOrNew([
-//            'repository_id' => $repo,
+            'repository_id' => $repo,
             'user_id' => $user_id,
         ]);
 
