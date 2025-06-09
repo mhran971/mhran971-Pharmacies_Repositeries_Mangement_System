@@ -3,6 +3,7 @@
 namespace App\Services\Pharmacy\Profile;
 
 
+use App\Http\Resources\UserProfileResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,9 +14,8 @@ class ProfileService
 {
     public function myProfile()
     {
-        return Auth::user();
-
-
+        $user = Auth::user();
+        return $user->makehidden('token');
     }
 
     public function updateProfile(Request $request)
@@ -28,7 +28,9 @@ class ProfileService
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
-            return $data;
+
+            $user->refresh();
+            return new UserProfileResource($user);
         } else return "Sth got worng!!";
 
     }
@@ -38,7 +40,7 @@ class ProfileService
         $user = Auth::user();
         if ($user)
             $user->delete();
-        return 'success';
+        return 'deleted success';
     }
 
 }

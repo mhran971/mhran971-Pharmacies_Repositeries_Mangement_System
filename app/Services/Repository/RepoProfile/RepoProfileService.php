@@ -3,7 +3,9 @@
 namespace App\Services\Repository\RepoProfile;
 
 
+use App\Http\Resources\UserProfileResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -12,7 +14,8 @@ class RepoProfileService
 {
     public function myProfile()
     {
-        return Auth::user();
+        $user = Auth::user();
+        return $user->makehidden('token');
 
 
     }
@@ -27,16 +30,18 @@ class RepoProfileService
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
-            return $data;
-        } else
-            return "Something got worng!!";
+
+            $user->refresh();
+            return new UserProfileResource($user);
+        } else return "Sth got worng!!";
+
     }
 
     public function deleteProfile()
     {
         $user = Auth::user();
         $user->delete();
-        return $user;
+        return 'deleted success';
     }
 
 }

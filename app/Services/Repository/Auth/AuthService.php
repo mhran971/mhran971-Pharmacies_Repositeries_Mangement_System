@@ -5,6 +5,7 @@ namespace App\Services\Repository\Auth;
 use App\Http\Requests\Repository\Auth\EmployeeRequest;
 use App\Http\Requests\Repository\Auth\LoginRequest;
 use App\Http\Requests\Repository\Auth\Repo_OwnerRequest;
+use App\Http\Resources\UserLoginResource;
 use App\Models\Repository;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -83,14 +84,14 @@ class AuthService
     public function login(LoginRequest $request)
     {
         if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
-            return 'user not founded';
+            return abort_if($token, 404, 'user not founded');
         }
 
         $user = Auth::user();
         $user->update(['token' => $token]);
 
         return [
-            'user' => $user,
+            'user' => new UserLoginResource($user),
             'authorization' => [
                 'token' => $token,
                 'type' => 'bearer'
