@@ -14,9 +14,9 @@ class PharmacyAuthorizationService
     {
         $allUsers = [];
 
-        User::chunk(100, function ($usersChunk) use (&$allUsers) {
+        User::Select('id', 'name')->chunk(100, function ($usersChunk) use (&$allUsers) {
             foreach ($usersChunk as $user) {
-                $allUsers[] = $user->name;
+                $allUsers[] = $user;
             }
         });
 

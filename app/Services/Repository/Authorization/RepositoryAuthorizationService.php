@@ -20,13 +20,14 @@ class RepositoryAuthorizationService
             $data = $en_data = Permission::get(['id', 'name_en']);
         return $data;
     }
-public function get_users(): array
-{
+
+    public function get_users(): array
+    {
         $allUsers = [];
 
-        User::chunk(100, function ($usersChunk) use (&$allUsers) {
+        User::Select('id', 'name')->chunk(100, function ($usersChunk) use (&$allUsers) {
             foreach ($usersChunk as $user) {
-                $allUsers[] = $user->name;
+                $allUsers[] = $user;
             }
         });
 
