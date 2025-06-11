@@ -17,7 +17,7 @@ class ForgotPasswordController extends BaseController
     public function forgotPassword(ForgotPasswordRequest $request){
         $emailExist = User::where('email', $request->email)->first();
         if(!$emailExist){
-            return response()->json(['error' => 'Invalid code'], 422);
+            return response()->json(['error' => 'Invalid email'], 422);
         }
         $code = mt_rand(100000, 999999);
         $user = VerificationCode::updateOrCreate(
@@ -26,13 +26,21 @@ class ForgotPasswordController extends BaseController
              'created_at' => now()]
         );
 
-        Mail::to($request->email)
-            ->queue(new PasswordResetCodeMail($code, 5));
-        return response()->json([
-            'message' => 'Verification code sent to your email',
-            'expires_in' => 300 // 5 minutes in seconds
-        ]);
+//        Mail::to($request->email)
+//            ->queue(new PasswordResetCodeMail($code, 5));
+        if($user){
+            Mail::to($request->email)->send(new PasswordResetCodeMail($code));
+            return response()->json([
+                'message' => 'Verification code sent to your email',
+                'expires_in' => '5 minutes'
+            ]);
+        }
+       else{
+           return response()->json([
+               'message' => 'Verification code not sent to your email'
+           ]);
 
+       }
     }
 
     public function verifyCode(ForgotPasswordRequest $request){
@@ -43,7 +51,7 @@ class ForgotPasswordController extends BaseController
         if (!$record) {
             return response()->json(['error' => 'Invalid code'], 422);
         }
-        if ($record->updated_at->addMinutes(185)->isPast()) {
+        if ($record->updated_at->addMinutes(5)->isPast()) {
             return response()->json(['error' => 'Code expired'], 422);
         }
 

@@ -12,13 +12,13 @@ use Illuminate\Queue\SerializesModels;
 class PasswordResetCodeMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $code;
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($code)
     {
-        //
+        $this->code = $code;
     }
 
     /**
@@ -49,5 +49,10 @@ class PasswordResetCodeMail extends Mailable
     public function attachments(): array
     {
         return [];
+    }
+
+    public function build()
+    {
+        return $this->markdown('emails.send-code-reset-password');
     }
 }
