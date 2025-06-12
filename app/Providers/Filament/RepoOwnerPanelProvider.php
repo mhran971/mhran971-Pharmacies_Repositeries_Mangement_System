@@ -26,7 +26,8 @@ class RepoOwnerPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('repoOwner')
-            ->path('repo-Owner')
+            ->path('')
+//            ->path('repo-Owner')
 //            ->maxContentWidth('content')
             ->registration(CustomRegister::class)
             ->login()

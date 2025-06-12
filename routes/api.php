@@ -35,7 +35,7 @@ Route::middleware(['auth:api'])->prefix('Repository')
     ->controller(PharmacyAuthorizationController::class)->group(function () {
         Route::get('/get-permissions/{lang}', 'get_all_permissions');
         Route::get('/all-users', 'get_all_users');
-        Route::post('/assign-permissions/{user_id}','assign_permissions_user');
+        Route::post('/assign-permissions/{user_id}', 'assign_permissions_user');
 
     });
 
@@ -66,9 +66,13 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
     });
 
 
+/*                =============================
+                  ||        General API         ||
+                  =============================                              */
+
+
 Route::get('/get', function () {
     $allMedicines = collect();
-//    return $allMedicines=\App\Models\Medicine::all();
 
     \App\Models\Medicine::chunk(6700, function ($medicines) use (&$allMedicines) {
         $allMedicines = $allMedicines->merge($medicines);
@@ -76,4 +80,26 @@ Route::get('/get', function () {
 
     return $allMedicines;
 });
+
+Route::get('/getform', function () {
+    return $Pharmaceutical_Forms = \App\Models\Pharmaceutical_Form::query()->get();
+});
+
+Route::get('/getcompanies', function () {
+    return $laboratories = \App\Models\laboratory::query()->get();
+});
+
+Route::get('/getusers', function () {
+    return $Users = \App\Models\User::query()->get();
+});
+
+Route::get('/get/medbylaboratory_id/{laboratory_id}', function (string $laboratory_id) {
+    return $allMedicines = \App\Models\Medicine::query()
+        ->where('laboratory_id', $laboratory_id)->get();
+});
+Route::get('/get/medbyForm_id/{Pharmaceutical_Form_id}', function (string $Pharmaceutical_Form_id) {
+    return $allMedicines = \App\Models\Medicine::query()
+        ->where('Pharmaceutical_Form_id', $Pharmaceutical_Form_id)->get();
+});
+
 

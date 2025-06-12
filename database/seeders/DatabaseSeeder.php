@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             RepositoryUserSeeder::class,
             PermissionsSeeder::class,
             RepositoryUserPermissionsSeeder::class,
+            Pharmaceutical_FormSeeder::class,
+            LaboratorySeeder::class,
 //            MedicineSeeder::class,
         ]);
     }

@@ -5,6 +5,7 @@ namespace App\Filament\RepoOwner\Resources;
 use App\Filament\RepoOwner\Resources\MedicineResource\Pages;
 use App\Filament\RepoOwner\Resources\MedicineResource\RelationManagers;
 use App\Models\Medicine;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,10 +27,12 @@ class MedicineResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                TextInput::make('laboratory_name')
-                    ->label('Laboratory Name')
-                    ->required()
-                    ->maxLength(255),
+
+                Select::make('laboratory_id')
+                    ->label('Laboratory')
+                    ->relationship('laboratory', 'laboratory_name')
+                    ->searchable()
+                    ->required(),
 
                 TextInput::make('composition')
                     ->label('Composition')
@@ -46,10 +49,11 @@ class MedicineResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                TextInput::make('pharmaceutical_form')
+                Select::make('pharmaceutical_form_id')
                     ->label('Pharmaceutical Form')
-                    ->required()
-                    ->maxLength(255),
+                    ->relationship('pharmaceuticalForm', 'name')
+                    ->searchable()
+                    ->required(),
             ]);
     }
 
@@ -59,12 +63,10 @@ class MedicineResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('ID')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('trade_name')->label('Trade Name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('laboratory_name')->label('Laboratory Name')->sortable(),
-                Tables\Columns\TextColumn::make('composition')->label('Composition'),
+                Tables\Columns\TextColumn::make('laboratory.name')->label('Laboratory Name')->sortable()->badge()->color('info'), Tables\Columns\TextColumn::make('composition')->label('Composition'),
                 Tables\Columns\TextColumn::make('titer')->label('Titer')->badge(),
-                Tables\Columns\TextColumn::make('packaging')->label('Packaging')->sortable(),
-                Tables\Columns\TextColumn::make('pharmaceutical_form')->label('Pharmaceutical Form')->sortable(),
-            ])
+                Tables\Columns\TextColumn::make('packaging')->label('Packaging')->sortable()->badge()->color('success'),
+                Tables\Columns\TextColumn::make('pharmaceuticalForm.name')->label('Pharmaceutical Form')->sortable()->badge()->color('warning'),])
             ->filters([
                 //
             ])

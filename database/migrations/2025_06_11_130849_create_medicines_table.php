@@ -11,11 +11,14 @@ return new class extends Migration {
         Schema::create('medicines', function (Blueprint $table) {
             $table->id();
             $table->text('trade_name');
-            $table->text('laboratory_name');
+            $table->text('laboratory_id');
+            //                ->constrained('laboratories')->casecadeonupdate()->casecadeondelete();
+
             $table->text('composition');
             $table->text('titer');
             $table->text('packaging');
-            $table->text('pharmaceutical_form');
+            $table->text('pharmaceutical_form_id');
+//                ->constrained('pharmaceutical_form')->casecadeonupdate()->casecadeondelete();
             $table->timestamps();
         });
     }
