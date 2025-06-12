@@ -66,3 +66,14 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
     });
 
 
+Route::get('/get', function () {
+    $allMedicines = collect();
+//    return $allMedicines=\App\Models\Medicine::all();
+
+    \App\Models\Medicine::chunk(6700, function ($medicines) use (&$allMedicines) {
+        $allMedicines = $allMedicines->merge($medicines);
+    });
+
+    return $allMedicines;
+});
+

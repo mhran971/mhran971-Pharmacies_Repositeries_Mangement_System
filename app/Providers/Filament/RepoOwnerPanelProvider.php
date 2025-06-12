@@ -27,15 +27,18 @@ class RepoOwnerPanelProvider extends PanelProvider
             ->default()
             ->id('repoOwner')
             ->path('repo-Owner')
-            ->maxContentWidth('content')
+//            ->maxContentWidth('content')
             ->registration(CustomRegister::class)
             ->login()
+            ->maxContentWidth('full')
+            ->sidebarCollapsibleOnDesktop()
+//            ->sidebarFullyCollapsibleOnDesktop()
             ->passwordReset()
             ->profile()
             ->font('cairo')
             ->brandLogo(asset('images/logo.png'))
             ->brandLogoHeight('120px')
-        ->colors([
+            ->colors([
                 'primary' => Color::Cyan,
             ])
             ->discoverResources(in: app_path('Filament/RepoOwner/Resources'), for: 'App\\Filament\\RepoOwner\\Resources')

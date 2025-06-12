@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             RepositoryUserSeeder::class,
             PermissionsSeeder::class,
             RepositoryUserPermissionsSeeder::class,
-
+//            MedicineSeeder::class,
         ]);
     }
 }

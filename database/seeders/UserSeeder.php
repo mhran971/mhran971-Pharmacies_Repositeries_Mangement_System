@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             \App\Models\User::create([
                 'name' => fake()->name(),
                 'phone_number' => fake()->phoneNumber(),
