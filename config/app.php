@@ -13,7 +13,16 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Pharmacy_Repository_management_System'),
+//    'providers' => [
+//        /*
+//         * Package Service Providers...
+//         */
+//        Maatwebsite\Excel\ExcelServiceProvider::class,
+//    ],
+//    'aliases' => [
+//        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+//    ],
 
     /*
     |--------------------------------------------------------------------------
