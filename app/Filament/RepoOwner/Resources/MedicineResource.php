@@ -59,7 +59,14 @@ class MedicineResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->paginated([10, 25, 50, 100,])
+        return $table->paginated([10, 25, 50, 100,])->striped()->deferLoading()
+            //->heading('Medicines')
+            // ->description('Manage your Medicine here.')
+            //->poll('1s')
+            ->groups([
+                'laboratory.name',
+                'pharmaceuticalForm.name',
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('ID')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('trade_name')->label('Trade Name')->sortable()->searchable(),

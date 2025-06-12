@@ -6,6 +6,7 @@ use App\Http\Controllers\Pharmacy\Profile\ProfileController;
 use App\Http\Controllers\Repository\Auth\RepositoryAuthController;
 use App\Http\Controllers\Repository\Authorization\RepoAuthorizationController;
 use App\Http\Controllers\Repository\Profile\RepoProfileController;
+use App\Models\Medicine;
 use Illuminate\Support\Facades\Route;
 
 /*                =============================
@@ -71,16 +72,31 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
                   =============================                              */
 
 
+
 Route::get('/get', function () {
     $allMedicines = collect();
 
-    \App\Models\Medicine::chunk(6700, function ($medicines) use (&$allMedicines) {
-        $allMedicines = $allMedicines->merge($medicines);
-    });
+    Medicine::with(['laboratory', 'pharmaceuticalForm'])
+        ->chunk(6700, function ($medicines) use (&$allMedicines) {
+            $updatedChunk = $medicines->map(function ($medicine) {
+                return [
+                    'id' => $medicine->id,
+                    'trade_name' => $medicine->trade_name,
+                    'laboratory' => $medicine->laboratory?->name ?? 'Unknown',
+                    'composition' => $medicine->composition,
+                    'titer' => $medicine->titer,
+                    'packaging' => $medicine->packaging,
+                    'pharmaceutical_form' => $medicine->pharmaceuticalForm?->name ?? 'Unknown',
+                    'created_at' => $medicine->created_at,
+                    'updated_at' => $medicine->updated_at,
+                ];
+            });
 
-    return $allMedicines;
+            $allMedicines = $allMedicines->merge($updatedChunk);
+        });
+
+    return response()->json($allMedicines->values());
 });
-
 Route::get('/getform', function () {
     return $Pharmaceutical_Forms = \App\Models\Pharmaceutical_Form::query()->get();
 });
