@@ -56,9 +56,9 @@ Route::prefix('Pharmacy')
 Route::prefix('passwordAndEmail')
     ->controller(ForgotPasswordController::class)
     ->group(function () {
-        Route::post('forgotPassword', 'forgotPassword');
-        Route::post('verifyCode', 'verifyCode');
-        Route::post('resetPassword', 'resetPassword');
+        Route::post('/forgotPassword', 'forgotPassword');
+        Route::post('/verifyCode', 'verifyCode');
+        Route::post('/resetPassword', 'resetPassword');
     });
 
 Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
