@@ -12,8 +12,9 @@ return new class extends Migration {
     {
         Schema::create('pharmaceutical_forms', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
-            //$table->timestamps();
+            $table->string('name_en');
+            $table->string('name_ar');
+            $table->timestamps();
         });
     }
 

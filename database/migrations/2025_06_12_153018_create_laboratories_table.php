@@ -11,10 +11,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('laboratories', function (Blueprint $table) {
-            $table->id();
-            $table->text('name');
-
-//            $table->timestamps();
+                $table->id();
+                $table->string('name_en');
+                $table->string('name_ar');
+                $table->timestamps();
         });
     }
 

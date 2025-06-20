@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Pharmaceutical_Form extends Model
 {
     protected $table = 'pharmaceutical_forms';
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name_en',
+        'name_ar',
+    ];
 
     public function medicines(): HasMany
     {

@@ -82,11 +82,13 @@ Route::get('/get', function () {
                 return [
                     'id' => $medicine->id,
                     'trade_name' => $medicine->trade_name,
-                    'laboratory' => $medicine->laboratory?->name ?? 'Unknown',
+                    'laboratory_ar' => $medicine->laboratory?->name_ar ?? 'Unknown',
+                    'laboratory_en' => $medicine->laboratory?->name_en ?? 'Unknown',
                     'composition' => $medicine->composition,
                     'titer' => $medicine->titer,
                     'packaging' => $medicine->packaging,
-                    'pharmaceutical_form' => $medicine->pharmaceuticalForm?->name ?? 'Unknown',
+                    'pharmaceutical_form_ar' => $medicine->pharmaceuticalForm?->name_ar ?? 'Unknown',
+                    'pharmaceutical_form_en' => $medicine->pharmaceuticalForm?->name_en ?? 'Unknown',
                     'created_at' => $medicine->created_at,
                     'updated_at' => $medicine->updated_at,
                 ];
@@ -97,12 +99,29 @@ Route::get('/get', function () {
 
     return response()->json($allMedicines->values());
 });
-Route::get('/getform', function () {
-    return $Pharmaceutical_Forms = \App\Models\Pharmaceutical_Form::query()->get();
+
+Route::get('/getforms_ar', function () {
+    return $Pharmaceutical_Forms = \App\Models\Pharmaceutical_Form::query()
+        ->select('id', 'name_ar')
+        ->get();
 });
 
-Route::get('/getcompanies', function () {
-    return $laboratories = \App\Models\laboratory::query()->get();
+Route::get('/getforms_en', function () {
+    return $Pharmaceutical_Forms = \App\Models\Pharmaceutical_Form::query()
+        ->select('id', 'name_en')
+        ->get();
+});
+
+Route::get('/getcompanies_ar', function () {
+    return $laboratories = \App\Models\laboratory::query()
+        ->select('id', 'name_ar')
+        ->get();
+});
+
+Route::get('/getcompanies_en', function () {
+    return $laboratories = \App\Models\laboratory::query()
+        ->select('id', 'name_en')
+        ->get();
 });
 
 Route::get('/getusers', function () {
@@ -113,9 +132,12 @@ Route::get('/get/medbylaboratory_id/{laboratory_id}', function (string $laborato
     return $allMedicines = \App\Models\Medicine::query()
         ->where('laboratory_id', $laboratory_id)->get();
 });
+
 Route::get('/get/medbyForm_id/{Pharmaceutical_Form_id}', function (string $Pharmaceutical_Form_id) {
     return $allMedicines = \App\Models\Medicine::query()
         ->where('Pharmaceutical_Form_id', $Pharmaceutical_Form_id)->get();
 });
+
+
 
 
