@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class LaboratorySeeder extends Seeder
 {
@@ -12,13 +13,28 @@ class LaboratorySeeder extends Seeder
      */
     public function run(): void
     {
+        $files = Storage::disk('public')->files('Laboratory');
+
+        foreach ($files as $file) {
+            $newName = str_replace(' ', '_', $file);
+            if ($file !== $newName) {
+                Storage::disk('public')->move($file, $newName);
+            }
+        }
+        $imageFiles = collect(Storage::disk('public')->files('Laboratory'))
+            ->mapWithKeys(function ($path) {
+                $filename = pathinfo($path, PATHINFO_FILENAME);
+                return [$filename => Storage::url($path)];
+            })
+            ->all();
+
         $laboratories = [
             ['name_en' => 'Al-Razi Limited Liability Company', 'name_ar' => 'شركة الرازي محدودة المسؤولية'],
             ['name_en' => 'Middle East Laboratories for Pharmaceutical Industries LLC', 'name_ar' => 'مختبرات شرق المتوسط للصناعات الدوائية المحدودة المسؤولية'],
             ['name_en' => 'Human Pharma Laboratory', 'name_ar' => 'معمل هيومن فارما'],
             ['name_en' => 'Zain Pharma for Pharmaceutical Industries', 'name_ar' => 'زين فارما للصناعات الدوائية'],
             ['name_en' => 'Shifa Company for Pharmaceutical Industries', 'name_ar' => 'شركة شفا للصناعات الدوائية'],
-            ['name_en' => 'Al-Madina Pharmaceutical Laboratory LLC / City Pharma', 'name_ar' => 'معمل المدينة الدوائية المحدودة المسؤولية / سيتي فارما /'],
+            ['name_en' => 'Al-Madina Pharmaceutical Laboratory LLC', 'name_ar' => 'معمل المدينة الدوائية المحدودة المسؤولية / سيتي فارما /'],
             ['name_en' => 'Al-Saad Laboratory for Pharmaceutical Industries', 'name_ar' => 'معمل السعد للصناعات الدوائية'],
             ['name_en' => 'Asia Laboratories for Pharmaceutical Industries', 'name_ar' => 'مختبرات آسيا للصناعات الدوائية'],
             ['name_en' => 'National Company for Pharmaceutical Industries', 'name_ar' => 'الشركة الوطنية للصناعات الدوائية'],
@@ -103,6 +119,12 @@ class LaboratorySeeder extends Seeder
             ['name_en' => 'Victoria Company for Pharmaceutical Industries LLC', 'name_ar' => 'شركة فكتوريا/ VICTORIA / للصناعات الدوائية المحدودة المسؤولية'],
             ['name_en' => 'Melkart Laboratory for Pharmaceutical Industries', 'name_ar' => 'معمل ملكارت للصناعات الدوائية'],
         ];
+        foreach ($laboratories as &$lab) {
+            $normalizedName = str_replace(' ', '_', $lab['name_en']);
+            $lab['image_path'] = $imageFiles[$normalizedName] ?? null;
+        }
+
+        $laboratories = array_filter($laboratories, fn($lab) => $lab['image_path'] !== null);
 
         collect($laboratories)->chunk(100)->each(function ($chunk) {
             DB::table('laboratories')->insert($chunk->toArray());
