@@ -124,13 +124,13 @@ Route::get('/getforms_en', function () {
 
 Route::get('/getcompanies_ar', function () {
     return $laboratories = \App\Models\laboratory::query()
-        ->select('id', 'name_ar')
+        ->select('id', 'name_ar', 'image_path')
         ->get();
 });
 
 Route::get('/getcompanies_en', function () {
     return $laboratories = \App\Models\laboratory::query()
-        ->select('id', 'name_en')
+        ->select('id', 'name_en', 'image_path')
         ->get();
 });
 
