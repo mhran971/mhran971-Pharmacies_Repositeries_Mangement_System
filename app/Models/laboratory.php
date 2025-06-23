@@ -11,6 +11,7 @@ class laboratory extends Model
     protected $fillable = [
         'name_en',
         'name_ar',
+        'image_path',
     ];
     public function medicines(): HasMany
     {
