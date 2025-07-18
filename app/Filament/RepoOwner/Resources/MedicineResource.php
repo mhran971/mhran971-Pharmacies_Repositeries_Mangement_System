@@ -70,10 +70,10 @@ class MedicineResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('ID')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('trade_name')->label('Trade Name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('laboratory.name')->label('Laboratory Name')->sortable()->badge()->color('info'), Tables\Columns\TextColumn::make('composition')->label('Composition'),
+                Tables\Columns\TextColumn::make('laboratory.name_en')->label('Laboratory Name')->sortable()->badge()->color('info'), Tables\Columns\TextColumn::make('composition')->label('Composition'),
                 Tables\Columns\TextColumn::make('titer')->label('Titer')->badge(),
                 Tables\Columns\TextColumn::make('packaging')->label('Packaging')->sortable()->badge()->color('success'),
-                Tables\Columns\TextColumn::make('pharmaceuticalForm.name')->label('Pharmaceutical Form')->sortable()->badge()->color('warning'),])
+                Tables\Columns\TextColumn::make('pharmaceuticalForm.name_en')->label('Pharmaceutical Form')->sortable()->badge()->color('warning'),])
             ->filters([
                 //
             ])
