@@ -16,11 +16,11 @@ class MedicineSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             $medicines[] = [
                 'trade_name' => fake()->userName(),
-                'laboratory_name' => fake()->company(),
+                'laboratory_id' => rand(5, 25),
                 'composition' => fake()->name(),
                 'titer' => Arr::random($titer),
                 'packaging' => fake()->name(),
-                'pharmaceutical_form' => fake()->name(),
+                'pharmaceutical_form_id' => rand(5, 25),
             ];
         }
 
