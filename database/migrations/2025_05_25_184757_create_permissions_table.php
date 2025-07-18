@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name_en');
             $table->string('name_ar');
+            $table->dropColumn(['created_at', 'updated_at']);
             $table->timestamps();
         });
     }
