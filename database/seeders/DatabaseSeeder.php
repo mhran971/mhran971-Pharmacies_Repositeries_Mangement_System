@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Imports\MedicinesImport;
 use Illuminate\Database\Seeder;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -24,5 +27,10 @@ class DatabaseSeeder extends Seeder
             LaboratorySeeder::class,
 //            MedicineSeeder::class,
         ]);
+
+        $path = storage_path('app/public/MedicineExcel/medicines.xlsx');
+
+        Excel::import(new MedicinesImport, $path);
+
     }
 }

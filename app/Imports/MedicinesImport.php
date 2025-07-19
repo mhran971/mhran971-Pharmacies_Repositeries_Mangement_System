@@ -16,21 +16,25 @@ class MedicinesImport implements ToModel
      */
     public function model(array $row)
     {
-        $lab = Laboratory::where('name', trim($row[1]))->first();
+        $laboratoryId = Laboratory::where('name_en', trim($row[1]))
+            ->orWhere('name_ar', trim($row[1]))
+            ->value('id');
 
-        $form = Pharmaceutical_Form::where('name', trim($row[5]))->first();
+        $pharmaceuticalFormId = Pharmaceutical_Form::where('name_en', trim($row[5]))
+            ->orWhere('name_ar', trim($row[5]))
+            ->value('id');
 
-        if (!$lab || !$form) {
+        if (!$laboratoryId || !$pharmaceuticalFormId) {
             return null;
         }
 
         return new Medicine([
             'trade_name' => $row[0],
-            'laboratory_id' => $lab->id,
+            'laboratory_id' => $laboratoryId,
             'composition' => $row[2],
             'titer' => $row[3],
             'packaging' => $row[4],
-            'pharmaceutical_form_id' => $form->id,
+            'pharmaceutical_form_id' => $pharmaceuticalFormId,
         ]);
     }
 }
