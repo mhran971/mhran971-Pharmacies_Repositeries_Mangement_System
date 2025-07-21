@@ -12,7 +12,7 @@ class Role extends Model
         [
             'name'
         ];
-
+    public $timestamps = false;
     public function owner(): HasMany
     {
         return $this->hasMany(User::class, 'role_id');

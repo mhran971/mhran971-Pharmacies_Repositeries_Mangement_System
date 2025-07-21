@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pharmacy extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'pharmacy_name',
         'pharmacy_phone',
@@ -17,5 +20,15 @@ class Pharmacy extends Model
     public function pharmacists(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class, 'pharmacy_users');
+    }
+
+    public function movements()
+    {
+        return $this->hasMany(StockMovement::class);
+    }
+
+    public function stock()
+    {
+        return $this->hasMany(PharmacyStock::class);
     }
 }

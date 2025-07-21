@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\Pharmacy\Auth\ForgotPasswordController;
 use App\Http\Controllers\Pharmacy\Auth\PharmacyAuthController;
 use App\Http\Controllers\Pharmacy\Authorization\PharmacyAuthorizationController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Pharmacy\Profile\ProfileController;
 use App\Http\Controllers\Repository\Auth\RepositoryAuthController;
 use App\Http\Controllers\Repository\Authorization\RepoAuthorizationController;
 use App\Http\Controllers\Repository\Profile\RepoProfileController;
+use App\Http\Controllers\StockMovementsController;
 use App\Models\Medicine;
 use Illuminate\Support\Facades\Route;
 
@@ -76,11 +78,17 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
         Route::post('/assign-permissions/{user_id}', 'assign_permissions_user');
     });
 
+Route::prefix('Pharmacy')->group(function () {
+    Route::get('/stock/{pharmacy_id}', [StockMovementsController::class, 'pharmacy_stock']);
+    Route::post('/stock/{pharmacy_id}/{type}', [StockMovementsController::class, 'adjust']);
+    Route::get('/expiring_Soon/{pharmacy_id}', [InventoryController::class, 'expiringSoon']);
+    Route::get('/low_Stock/{pharmacy_id}', [InventoryController::class, 'lowStock']);
+});
+
 
 /*                =============================
                   ||        General API         ||
                   =============================                              */
-
 
 
 Route::get('/get', function () {
@@ -126,6 +134,7 @@ Route::get('/getcompanies_ar', function () {
     return $laboratories = \App\Models\laboratory::query()
         ->select('id', 'name_ar', 'image_path')
         ->get();
+
 });
 
 Route::get('/getcompanies_en', function () {

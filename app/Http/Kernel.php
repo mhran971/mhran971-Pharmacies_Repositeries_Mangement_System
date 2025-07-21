@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -64,4 +65,14 @@ class Kernel extends HttpKernel
         // ✅ Middleware الخاص بك
         'owner.only' => \App\Http\Middleware\OwnerOnly::class,
     ];
+
+    protected function schedule(Schedule $schedule)
+    {
+
+        $schedule
+            ->command('inventory:check-expiry --days=30')
+            ->dailyAt('02:00')
+            ->withoutOverlapping()
+            ->runInBackground();
+    }
 }
