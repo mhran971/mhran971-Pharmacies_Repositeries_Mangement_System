@@ -31,4 +31,9 @@ class Pharmacy extends Model
     {
         return $this->hasMany(PharmacyStock::class);
     }
+
+    public function pharmacy_stocks(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Medicine::class, 'pharmacy_stocks');
+    }
 }

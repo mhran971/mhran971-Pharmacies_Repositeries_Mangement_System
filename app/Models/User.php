@@ -56,19 +56,19 @@
             return $this->belongsToMany(Repository::class, 'repository_users');
         }
 
-        public function owner(): HasOne
+        public function pharmacy_owner(): HasOne
         {
-            return $this->hasOne(Repository::class, 'owner_id');
+            return $this->hasOne(Pharmacy::class, 'owner_id');
+        }
+
+        public function Pharmacist(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+        {
+            return $this->belongsToMany(Repository::class, 'pharmacy_users');
         }
 
         public function repoowner(): HasOne
         {
             return $this->hasOne(Repository::class, 'owner_id');
-        }
-
-        public function pharmacy_owner(): HasOne
-        {
-            return $this->hasOne(Pharmacy::class, 'owner_id');
         }
 
         /**

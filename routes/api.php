@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\Operation\PharmacyStockController;
+use App\Http\Controllers\Operation\SalesMovementController;
 use App\Http\Controllers\Pharmacy\Auth\ForgotPasswordController;
 use App\Http\Controllers\Pharmacy\Auth\PharmacyAuthController;
 use App\Http\Controllers\Pharmacy\Authorization\PharmacyAuthorizationController;
@@ -78,11 +80,12 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
         Route::post('/assign-permissions/{user_id}', 'assign_permissions_user');
     });
 
-Route::prefix('Pharmacy')->group(function () {
-    Route::get('/stock/{pharmacy_id}', [StockMovementsController::class, 'pharmacy_stock']);
-    Route::post('/stock/{pharmacy_id}/{type}', [StockMovementsController::class, 'adjust']);
-    Route::get('/expiring_Soon/{pharmacy_id}', [InventoryController::class, 'expiringSoon']);
-    Route::get('/low_Stock/{pharmacy_id}', [InventoryController::class, 'lowStock']);
+Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
+    Route::get('/pharmacy-stocks', [PharmacyStockController::class, 'pharmacy_stock']);
+    Route::get('/pharmacy-stocks/expiring', [PharmacyStockController::class, 'expiringSoon']);
+    Route::get('/pharmacy-stocks/lowStock', [PharmacyStockController::class, 'lowStock']);
+    Route::post('/sell/bulkStore', [SalesMovementController::class, 'bulkStore']);
+
 });
 
 

@@ -24,9 +24,13 @@ class DatabaseSeeder extends Seeder
 
         $excelPath = storage_path('app/public/MedicineExcel/medicines.xlsx');
         Excel::import(new MedicinesImport, $excelPath);
+        $this->command->info('   Medicines Importing...');
 
         $this->call([
-            PharmacyStockTestSeeder::class,
+            PharmacySeeder::class,
+            PharmacyUserSeeder::class,
+            SalesMovementSeeder::class,
+            PharmacyStockSeeder::class,
         ]);
     }
 }

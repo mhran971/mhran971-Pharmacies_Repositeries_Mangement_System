@@ -2,28 +2,35 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PharmacyStock extends Model
 {
-    use HasFactory;
-
-    public $timestamps = false;
     protected $table = 'pharmacy_stocks';
-    protected $fillable = ['pharmacy_id', 'batch_id', 'qty_on_hand', 'updated_at'];
-
-    protected $casts = [
-        'updated_at' => 'datetime',
+    protected $fillable = [
+        'medicine_id',
+        'pharmacy_id',
+        'quantity',
+        'batch',
+        'Purchase_price',
+        'sale_price',
+        'expiration_date',
     ];
+
+    public function movements()
+    {
+        return $this->hasMany(Sales_movements::class);
+    }
+
+    public function medicine()
+    {
+        return $this->belongsTo(Medicine::class);
+    }
 
     public function pharmacy()
     {
         return $this->belongsTo(Pharmacy::class);
     }
 
-    public function batch(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Batch::class);
-    }
+
 }

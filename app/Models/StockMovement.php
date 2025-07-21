@@ -2,23 +2,21 @@
 
 namespace App\Models;
 
-use App\Jobs\UpdatePharmacyStockJob;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Queue\Queueable;
 
 class StockMovement extends Model
 {
-    use Queueable;
+    protected $fillable = [
+        'medicine_id',
+        'pharmacy_id',
+        'user_id',
+        'quantity',
+        'batch',
+    ];
 
-    public $timestamps = false;
-
-    protected $fillable = ['pharmacy_id', 'batch_id', 'type', 'qty', 'user_id'];
-
-    protected static function booted(): void
+    public function medicine()
     {
-        static::created(function ($m) {
-            UpdatePharmacyStockJob::dispatch($m);
-        });
+        return $this->belongsTo(Medicine::class);
     }
 
     public function pharmacy()
@@ -26,9 +24,8 @@ class StockMovement extends Model
         return $this->belongsTo(Pharmacy::class);
     }
 
-    public function batch()
+    public function user()
     {
-        return $this->belongsTo(Batch::class);
+        return $this->belongsTo(User::class);
     }
-
 }
