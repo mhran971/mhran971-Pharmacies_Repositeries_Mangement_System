@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('name_en');
 
             $table->string('name_ar');
+            $table->string('image_path');
+            $table->dropColumn(['created_at', 'updated_at']);
             $table->timestamps();
         });
     }

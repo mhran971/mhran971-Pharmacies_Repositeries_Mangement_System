@@ -8,11 +8,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class laboratory extends Model
 {
     protected $table = 'laboratories';
+
+    public $timestamps = false;
+
     protected $fillable = [
         'name_en',
         'name_ar',
         'image_path',
     ];
+
     public function medicines(): HasMany
     {
         return $this->hasMany(Medicine::class, 'laboratory_id');
