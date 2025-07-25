@@ -25,7 +25,7 @@ class MyEmployeesResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $repository = auth()->user()?->owner()->first();
+        $repository = auth()->user()?->repoowner()->first();
 
         return Repository_User::query()
             ->when($repository, fn($query) => $query->where('repository_id', $repository->id)

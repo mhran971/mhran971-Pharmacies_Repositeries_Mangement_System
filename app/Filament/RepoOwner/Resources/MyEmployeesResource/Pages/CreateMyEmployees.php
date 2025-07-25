@@ -12,7 +12,7 @@ class CreateMyEmployees extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $repository = Auth::user()?->owner()->first();
+        $repository = Auth::user()?->repoowner()->first();
         if ($repository) {
             $data['repository_id'] = $repository->id;
 
