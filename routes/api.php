@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\Operation\PharmacyStockController;
 use App\Http\Controllers\Operation\SalesMovementController;
 use App\Http\Controllers\Pharmacy\Auth\ForgotPasswordController;
@@ -10,7 +9,6 @@ use App\Http\Controllers\Pharmacy\Profile\ProfileController;
 use App\Http\Controllers\Repository\Auth\RepositoryAuthController;
 use App\Http\Controllers\Repository\Authorization\RepoAuthorizationController;
 use App\Http\Controllers\Repository\Profile\RepoProfileController;
-use App\Http\Controllers\StockMovementsController;
 use App\Models\Medicine;
 use Illuminate\Support\Facades\Route;
 
@@ -121,30 +119,30 @@ Route::get('/get', function () {
     return response()->json($allMedicines->values());
 });
 
-Route::get('/getforms_ar', function () {
+Route::get('/getforms', function () {
     return $Pharmaceutical_Forms = \App\Models\Pharmaceutical_Form::query()
-        ->select('id', 'name_ar')
+        ->select('id', 'name_ar', 'name_en', 'image_path')
         ->get();
 });
 
-Route::get('/getforms_en', function () {
-    return $Pharmaceutical_Forms = \App\Models\Pharmaceutical_Form::query()
-        ->select('id', 'name_en')
-        ->get();
-});
+//Route::get('/getforms_en', function () {
+//    return $Pharmaceutical_Forms = \App\Models\Pharmaceutical_Form::query()
+//        ->select('id', 'name_en')
+//        ->get();
+//});
 
-Route::get('/getcompanies_ar', function () {
+Route::get('/getcompanies', function () {
     return $laboratories = \App\Models\laboratory::query()
-        ->select('id', 'name_ar', 'image_path')
+        ->select('id', 'name_ar', 'name_en', 'image_path')
         ->get();
 
 });
 
-Route::get('/getcompanies_en', function () {
-    return $laboratories = \App\Models\laboratory::query()
-        ->select('id', 'name_en', 'image_path')
-        ->get();
-});
+//Route::get('/getcompanies_en', function () {
+//    return $laboratories = \App\Models\laboratory::query()
+//        ->select('id', 'name_en', 'image_path')
+//        ->get();
+//});
 
 Route::get('/getusers', function () {
     return $Users = \App\Models\User::query()->get();
