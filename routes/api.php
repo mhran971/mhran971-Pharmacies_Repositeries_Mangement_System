@@ -149,12 +149,12 @@ Route::get('/getusers', function () {
 });
 
 Route::get('/get/medbylaboratory_id/{laboratory_id}', function (string $laboratory_id) {
-    return $allMedicines = \App\Models\Medicine::query()
+    return $allMedicines = \App\Models\Medicine::query()->with('pharmaceuticalForm')
         ->where('laboratory_id', $laboratory_id)->get();
 });
 
 Route::get('/get/medbyForm_id/{Pharmaceutical_Form_id}', function (string $Pharmaceutical_Form_id) {
-    return $allMedicines = \App\Models\Medicine::query()
+    return $allMedicines = \App\Models\Medicine::query()->with('laboratory')
         ->where('Pharmaceutical_Form_id', $Pharmaceutical_Form_id)->get();
 });
 
