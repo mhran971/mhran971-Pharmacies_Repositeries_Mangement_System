@@ -14,8 +14,8 @@ class BulkSalesMovementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
-            'pharmacy_id' => 'required|exists:pharmacies,id',
+//            'user_id' => 'required|exists:users,id',
+//            'pharmacy_id' => 'required|exists:pharmacies,id',
             'items' => 'required|array|min:1',
             'items.*.medicine_id' => 'required|exists:medicines,id',
             'items.*.quantity' => 'required|integer|min:1',

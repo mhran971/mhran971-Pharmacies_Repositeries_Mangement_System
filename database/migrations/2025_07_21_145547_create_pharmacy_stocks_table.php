@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
 
             $table->foreignId('medicine_id')->constrained('medicines')->onDelete('cascade');
-            $table->foreignId('pharmacy_id')->constrained('pharmacies')->onDelete('cascade');
+            $table->integer('pharmacy_id')->constrained('pharmacies')->onDelete('cascade');
             $table->integer('quantity')->default(0);
             $table->string('batch');
             $table->decimal('Purchase_price', 10, 2);

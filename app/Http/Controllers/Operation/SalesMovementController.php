@@ -59,7 +59,7 @@ class SalesMovementController extends Controller
                 $medicine = \App\Models\Medicine::find($item['medicine_id']);
                 $errors[] = [
                     'medicine_id' => $item['medicine_id'],
-                    'medicine_name' => $medicine->trade_name ?? 'دواء غير معروف',
+                    'medicine_name' => $medicine->trade_name ?? 'Unknown medicine',
                     'requested_quantity' => $item['quantity'],
                     'message' => $e->getMessage(),
                 ];
@@ -68,7 +68,7 @@ class SalesMovementController extends Controller
 
         if (!empty($errors)) {
             return response()->json([
-                'message' => 'بعض الأدوية غير متوفرة بالكميات المطلوبة.',
+                'message' => 'Some medications are not available in the required quantities.',
                 'errors' => $errors,
             ], 422);
         }

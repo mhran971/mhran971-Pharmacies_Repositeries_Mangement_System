@@ -19,7 +19,7 @@ class PharmacyStockSeeder extends Seeder
             for ($i = 0; $i < 10; $i++) {
                 PharmacyStock::create([
                     'medicine_id' => fake()->randomElement($medicines),
-                    'pharmacy_id' => fake()->randomElement($pharmacies),
+                    'pharmacy_id' => 11,
                     'quantity' => fake()->numberBetween(10, 100),
                     'batch' => strtoupper(fake()->bothify('BATCH###')),
                     'Purchase_price' => fake()->randomFloat(2, 1, 50),
