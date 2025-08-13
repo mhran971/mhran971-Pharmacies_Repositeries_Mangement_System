@@ -84,6 +84,7 @@ Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
     Route::get('/pharmacy-stocks/lowStock', [PharmacyStockController::class, 'lowStock']);
     Route::post('/sell/bulkStore', [SalesMovementController::class, 'bulkStore']);
     Route::post('/pharmacy-stocks/add-medicines', [PharmacyStockController::class, 'Add_To_stock']);
+    Route::post('/pharmacy-stocks/returned_medicine', [PharmacyStockController::class, 'Returned_Medicine']);
 
 });
 

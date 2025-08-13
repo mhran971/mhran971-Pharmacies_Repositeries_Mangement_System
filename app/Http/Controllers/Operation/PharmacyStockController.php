@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Operation;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddMedicineRequest;
+use App\Http\Requests\ReturnedMedicineRequest;
+use App\Models\Medicine;
 use App\Models\PharmacyStock;
 use App\Services\Pharmacy\Operation\Add_To_StockService;
 use Illuminate\Support\Facades\Auth;
@@ -60,12 +62,17 @@ class PharmacyStockController extends Controller
 
         $seenInRequest = [];
 
+        $medicinesMap = Medicine::whereIn('id', array_column($items, 'medicine_id'))
+            ->pluck('trade_name', 'id')
+            ->toArray();
+
         foreach ($items as $item) {
             $medicineId = $item['medicine_id'];
 
             if (in_array($medicineId, $existingStockIds)) {
                 $skipped[] = [
                     'medicine_id' => $medicineId,
+                    'medicine_name' => $medicinesMap[$medicineId] ?? null,
                     'reason' => 'Already exists in stock'
                 ];
                 continue;
@@ -74,6 +81,7 @@ class PharmacyStockController extends Controller
             if (in_array($medicineId, $seenInRequest)) {
                 $skipped[] = [
                     'medicine_id' => $medicineId,
+                    'medicine_name' => $medicinesMap[$medicineId] ?? null,
                     'reason' => 'Duplicate in request'
                 ];
                 continue;
@@ -87,6 +95,43 @@ class PharmacyStockController extends Controller
         return response()->json([
             'added' => $stocks,
             'skipped' => $skipped
+        ]);
+    }
+
+
+    public function Returned_Medicine(ReturnedMedicineRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
+        $medicineId = $request->input('medicine_id');
+        $quantityToReturn = $request->input('quantity');
+
+        $previousQuantity = PharmacyStock::where('medicine_id', $medicineId)
+            ->where('pharmacy_id', $pharmacyId)
+            ->value('quantity');
+
+        if ($previousQuantity === null) {
+            return response()->json(['error' => 'Medicine not found in stock'], 404);
+        }
+
+        PharmacyStock::where('medicine_id', $medicineId)
+            ->where('pharmacy_id', $pharmacyId)
+            ->decrement('quantity', $quantityToReturn);
+
+        $newQuantity = PharmacyStock::where('medicine_id', $medicineId)
+            ->where('pharmacy_id', $pharmacyId)
+            ->value('quantity');
+
+        $medicineName = Medicine::where('id', $medicineId)->value('trade_name');
+
+        return response()->json([
+            'medicine' => $medicineName,
+            'previous_quantity' => $previousQuantity,
+            'new_quantity' => $newQuantity
         ]);
     }
 

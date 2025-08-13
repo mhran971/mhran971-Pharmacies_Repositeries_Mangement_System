@@ -17,10 +17,6 @@ class PharmacyStock extends Model
         'expiration_date',
     ];
 
-    public function movements()
-    {
-        return $this->hasMany(Sales_movements::class);
-    }
 
     public function medicine()
     {
