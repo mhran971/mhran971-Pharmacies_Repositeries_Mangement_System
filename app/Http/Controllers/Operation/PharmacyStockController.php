@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Operation;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddMedicineRequest;
+use App\Models\PharmacyStock;
 use App\Services\Pharmacy\Operation\Add_To_StockService;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,20 +43,53 @@ class PharmacyStockController extends Controller
 
     public function Add_To_stock(AddMedicineRequest $med)
     {
-
         $user = Auth::user();
-        $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
-
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+
+        $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
+
+        $existingStockIds = PharmacyStock::where('pharmacy_id', $pharmacyId)
+            ->pluck('medicine_id')
+            ->toArray();
+
         $items = $med->validated()['items'];
+        $stocks = [];
+        $skipped = [];
+
+        $seenInRequest = [];
 
         foreach ($items as $item) {
+            $medicineId = $item['medicine_id'];
+
+            if (in_array($medicineId, $existingStockIds)) {
+                $skipped[] = [
+                    'medicine_id' => $medicineId,
+                    'reason' => 'Already exists in stock'
+                ];
+                continue;
+            }
+
+            if (in_array($medicineId, $seenInRequest)) {
+                $skipped[] = [
+                    'medicine_id' => $medicineId,
+                    'reason' => 'Duplicate in request'
+                ];
+                continue;
+            }
+
+            $seenInRequest[] = $medicineId;
+
             $stocks[] = $this->Add_To_StockService->Add_medicine($pharmacyId, $item);
         }
-        return response()->json(['data' => $stocks]);
+
+        return response()->json([
+            'added' => $stocks,
+            'skipped' => $skipped
+        ]);
     }
+
     public function expiringSoon()
     {
         $user = Auth::user();

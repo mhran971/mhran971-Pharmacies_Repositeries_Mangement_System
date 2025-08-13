@@ -8,7 +8,7 @@ class Add_To_StockService
 {
     public function Add_medicine($pharmacyId, $item)
     {
-        return $stocks = \App\Models\PharmacyStock::create([
+        return $stocks = \App\Models\PharmacyStock::updateorcreate([
             'medicine_id' => $item['medicine_id'],
             'pharmacy_id' => $pharmacyId,
             'quantity' => $item['quantity'],

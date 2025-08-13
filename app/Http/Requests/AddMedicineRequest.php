@@ -23,7 +23,7 @@ class AddMedicineRequest extends FormRequest
     {
         return [
             'items' => 'required|array|min:1',
-            'items.*.medicine_id' => 'required|exists:medicines,id',
+            'items.*.medicine_id' => 'required|exists:medicines,id',//unique:Pharmacy_Stocks,medicine_id
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.batch' => 'required|string',
             'items.*.Purchase_price' => 'required|min:1',
