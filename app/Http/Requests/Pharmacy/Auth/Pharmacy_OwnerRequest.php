@@ -29,6 +29,7 @@ class Pharmacy_OwnerRequest extends FormRequest
             'pharmacy_name' => 'required|string|max:255',
             'pharmacy_phone' => 'required|numeric|digits:10',
             'pharmacy_address' => 'required|string|max:255',
+            'mac_token' => 'string'
         ];
     }
 

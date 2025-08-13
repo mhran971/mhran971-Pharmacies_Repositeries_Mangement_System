@@ -24,6 +24,7 @@ class AuthService
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role_id' => 2,
+                'mac_token' => $request->mac_token,
             ]);
 
             $pharmacy = Pharmacy::create([
@@ -59,6 +60,7 @@ class AuthService
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role_id' => 4,
+                'mac_token' => $request->mac_token,
             ]);
 
 //            $pharmacy = Pharmacy::find($request->pharmacy_id);

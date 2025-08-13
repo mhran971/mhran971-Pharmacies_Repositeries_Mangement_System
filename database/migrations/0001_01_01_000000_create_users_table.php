@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->unsignedBigInteger('role_id')->consentrained('roles')->casecadeonUpdate()->casecade0nDelete()->default(1);
             $table->text('token')->nullable();
+            $table->text('mac_token')->nullable();
             $table->text('remember_token')->nullable();
             $table->timestamps();
         });

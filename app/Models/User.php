@@ -24,7 +24,8 @@
             'email',
             'phone_number',
             'password',
-            'role_id'
+            'role_id',
+            'mac_token'
 
         ];
 
