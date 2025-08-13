@@ -83,6 +83,7 @@ Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
     Route::get('/pharmacy-stocks/expiring', [PharmacyStockController::class, 'expiringSoon']);
     Route::get('/pharmacy-stocks/lowStock', [PharmacyStockController::class, 'lowStock']);
     Route::post('/sell/bulkStore', [SalesMovementController::class, 'bulkStore']);
+    Route::post('/pharmacy-stocks/add-medicines', [PharmacyStockController::class, 'Add_To_stock']);
 
 });
 
@@ -154,7 +155,8 @@ Route::get('/get/medbylaboratory_id/{laboratory_id}', function (string $laborato
 });
 
 Route::get('/get/medbyForm_id/{Pharmaceutical_Form_id}', function (string $Pharmaceutical_Form_id) {
-    return $allMedicines = \App\Models\Medicine::query()->with('laboratory')
+    return $allMedicines = \App\Models\Medicine::query()->with('laboratory
+    ')
         ->where('Pharmaceutical_Form_id', $Pharmaceutical_Form_id)->get();
 });
 

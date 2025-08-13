@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Operation;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BulkSalesMovementRequest;
+use App\Http\Requests\Pharmacy\Operations\BulkSalesMovementRequest;
 use App\Jobs\UpdatePharmacyStockJob;
 use App\Services\Pharmacy\Operation\SalesMovementService as OperationSalesMovementService;
 use Illuminate\Http\Request;

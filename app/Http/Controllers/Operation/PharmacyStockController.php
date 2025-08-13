@@ -3,11 +3,20 @@
 namespace App\Http\Controllers\Operation;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddMedicineRequest;
+use App\Services\Pharmacy\Operation\Add_To_StockService;
 use Illuminate\Support\Facades\Auth;
 
 
 class PharmacyStockController extends Controller
 {
+    protected Add_To_StockService $Add_To_StockService;
+
+    public function __construct(Add_To_StockService $Add_To_StockService)
+    {
+        $this->Add_To_StockService = $Add_To_StockService;
+    }
+
     public function pharmacy_stock()
     {
         $user = Auth::user();
@@ -31,7 +40,22 @@ class PharmacyStockController extends Controller
         return response()->json(['data' => $stocks]);
     }
 
+    public function Add_To_stock(AddMedicineRequest $med)
+    {
 
+        $user = Auth::user();
+        $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        $items = $med->validated()['items'];
+
+        foreach ($items as $item) {
+            $stocks[] = $this->Add_To_StockService->Add_medicine($pharmacyId, $item);
+        }
+        return response()->json(['data' => $stocks]);
+    }
     public function expiringSoon()
     {
         $user = Auth::user();
