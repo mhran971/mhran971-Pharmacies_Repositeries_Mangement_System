@@ -43,14 +43,17 @@ class PharmacyAuthorizationController extends BaseController
             $this->sendError('Something got wrong');
     }
 
-    public function assign_permissions_user($user_id, Assign_PermissionRequest $request): \Illuminate\Http\JsonResponse
+    public function assignOrUpdatePermissions($user_id, Assign_PermissionRequest $request)
     {
-        $user = User::findorFail($user_id);
-        $data = $this->pharmacyAuthorizationService->assign_permissions($user_id, $request);
+        $user = User::findOrFail($user_id);
+
+        $data = $this->pharmacyAuthorizationService->assignOrUpdatePermissions($user_id, $request);
+
         return $this->sendResponse(
             $data,
-            "permissions " . implode(',', $data['permissions_id']) . " assigned successfully to {$user->name}"
+            "Permissions " . implode(',', $data['permissions_id']) . " assigned successfully to {$user->name}"
         );
     }
+
 
 }

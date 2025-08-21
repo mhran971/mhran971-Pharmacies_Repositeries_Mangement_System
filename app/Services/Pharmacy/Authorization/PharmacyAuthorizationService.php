@@ -44,44 +44,50 @@ class PharmacyAuthorizationService
             $data = $en_data = Permission::get(['id', 'name_en']);
         return $data;
     }
-    public function assign_permissions(int $user_id, Assign_PermissionRequest $request): \Illuminate\Http\JsonResponse|array
+
+    public function assignOrUpdatePermissions(int $user_id, Assign_PermissionRequest $request): array
     {
-        $permissions = is_array($request->input('permissions'))
-            ? $request->input('permissions')
-            : json_decode($request->input('permissions'), true);
-
         $owner = Auth::user();
-        if (!$owner)
-            return response()->json(['error' => 'no owner founded'], 401);
 
-        if (!$owner->pharmacy_owner) {
-            return response()->json(['error' => 'owner relation not found'], 401);
+        if (!$owner || !$owner->pharmacy_owner) {
+            throw new \Exception('Owner not found or no pharmacy relation');
         }
 
-        $pharmacy = $owner->pharmacy_owner->id;
+        $pharmacyId = $owner->pharmacy_owner->id;
 
-        $pharmacy_user = Pharmacy_User::firstOrNew([
-            'pharmacy_id' => $pharmacy,
-            'user_id' => $user_id,
-        ]);
-
-        $pharmacy_user->role = $request->input('role');
-        $pharmacy_user->is_work = true;
-        $pharmacy_user->save();
-        $pharmacy_user->refresh();
-
-        if ($pharmacy_user && is_array($permissions)) {
-            $pharmacy_user->user_pharmacy_permissions()->sync($permissions);
+        $permissions = $request->input('permissions');
+        if (is_string($permissions)) {
+            $permissions = json_decode($permissions, true);
+        }
+        if (!is_array($permissions)) {
+            $permissions = [];
         }
 
-        $permission_names = Permission::whereIn('id', $permissions)->get(['name_en', 'name_ar']);
-        $permission_id = Permission::whereIn('id', $permissions)->pluck('id')->toArray();
+        $pharmacyUser = Pharmacy_User::updateOrCreate(
+            [
+                'pharmacy_id' => $pharmacyId,
+                'user_id' => $user_id,
+            ],
+            [
+                'role' => $request->input('role'),
+                'is_work' => true,
+            ]
+        );
+
+        if (!empty($permissions)) {
+            $pharmacyUser->user_pharmacy_permissions()->sync($permissions);
+        } else {
+            $pharmacyUser->user_pharmacy_permissions()->detach();
+        }
+
+        $permissionNames = Permission::whereIn('id', $permissions)
+            ->get(['id', 'name_en', 'name_ar']);
 
         return [
-            'user' => $pharmacy_user,
-            'permissions_id' => $permission_id,
-            'permissions_name' => $permission_names,
+            'user' => $pharmacyUser,
+            'permissions_id' => $permissions,
+            'permissions_name' => $permissionNames,
         ];
-
     }
+
 }
