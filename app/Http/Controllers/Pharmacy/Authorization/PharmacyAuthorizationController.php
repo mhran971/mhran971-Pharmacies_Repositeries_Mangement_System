@@ -6,7 +6,6 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Pharmacy\Authorization\Assign_PermissionRequest;
 use App\Models\User;
 use App\Services\Pharmacy\Authorization\PharmacyAuthorizationService;
-use Illuminate\Http\Request;
 
 class PharmacyAuthorizationController extends BaseController
 {
@@ -16,6 +15,7 @@ class PharmacyAuthorizationController extends BaseController
     {
         $this->pharmacyAuthorizationService = $pharmacyAuthorizationService;
     }
+
     public function get_all_users()
     {
         $data = $this->pharmacyAuthorizationService->get_users();
@@ -24,6 +24,16 @@ class PharmacyAuthorizationController extends BaseController
         else
             $this->sendError('Something got wrong');
     }
+
+    public function My_Pharmacists()
+    {
+        $data = $this->pharmacyAuthorizationService->get_myPharmacists();
+        if ($data)
+            return $this->sendResponse($data,);
+        else
+            $this->sendError('Something got wrong at getting your Pharmacists !');
+    }
+
     public function get_all_permissions($lang)
     {
         $data = $this->pharmacyAuthorizationService->get_permissions($lang);

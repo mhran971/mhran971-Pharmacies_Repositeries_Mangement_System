@@ -4,6 +4,7 @@ namespace App\Services\Pharmacy\Authorization;
 
 use App\Http\Requests\Pharmacy\Authorization\Assign_PermissionRequest;
 use App\Models\Permission;
+use App\Models\Pharmacy;
 use App\Models\Pharmacy_User;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,17 @@ class PharmacyAuthorizationService
 
         return $allUsers;
     }
+
+    public function get_myPharmacists()
+    {
+
+        $user = Auth::user();
+        $pharmacy_ids = Pharmacy::where('owner_id', $user->id)->pluck('id')->toarray();
+        $user_ids = Pharmacy_User::whereIn('pharmacy_id', $pharmacy_ids)->pluck('user_id')->toarray();
+        return $users = User::whereIn('id', $user_ids)->get();
+
+    }
+
     public function get_permissions($lang): \Illuminate\Support\Collection
     {
 

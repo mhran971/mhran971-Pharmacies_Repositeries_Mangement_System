@@ -18,7 +18,7 @@ class PharmacyUserSeeder extends Seeder
             $user = $users->random();
 
             DB::table('pharmacy_users')->insert([
-                'pharmacy_id' => $pharmacy->id,
+                'pharmacy_id' => 11,//$pharmay->id,
                 'user_id' => $user->id,
                 'role' => fake()->randomElement(['pharmacist', 'assistant']),
                 'is_work' => fake()->boolean(),
