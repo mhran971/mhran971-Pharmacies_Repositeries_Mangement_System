@@ -27,7 +27,7 @@ class PharmacistRequest extends FormRequest
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             //'pharmacy_id' => 'required|Exists:pharmacies,id',
-            'mac_token' => 'string'
+            'mac_token' => 'nullable|string'
 
 
         ];
