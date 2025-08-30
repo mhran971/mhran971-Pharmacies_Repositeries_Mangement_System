@@ -7,8 +7,10 @@ use App\Http\Requests\AddMedicineRequest;
 use App\Http\Requests\ReturnedMedicineRequest;
 use App\Models\Medicine;
 use App\Models\PharmacyStock;
+use App\Models\StockMovement;
 use App\Services\Pharmacy\Operation\Add_To_StockService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 class PharmacyStockController extends Controller
@@ -117,21 +119,32 @@ class PharmacyStockController extends Controller
         if ($previousQuantity === null) {
             return response()->json(['error' => 'Medicine not found in stock'], 404);
         }
+       $data = DB::Transaction(function () use ($medicineId, $pharmacyId, $user, $quantityToReturn) {
+            StockMovement::Where('medicine_id', $medicineId)
+                ->where('pharmacy_id', $pharmacyId)
+                ->where('user_id', $user->id)
+                ->delete();
 
-        PharmacyStock::where('medicine_id', $medicineId)
-            ->where('pharmacy_id', $pharmacyId)
-            ->decrement('quantity', $quantityToReturn);
+            PharmacyStock::where('medicine_id', $medicineId)
+                ->where('pharmacy_id', $pharmacyId)
+                ->increment('quantity', $quantityToReturn);
 
-        $newQuantity = PharmacyStock::where('medicine_id', $medicineId)
-            ->where('pharmacy_id', $pharmacyId)
-            ->value('quantity');
+            $newQuantity = PharmacyStock::where('medicine_id', $medicineId)
+                ->where('pharmacy_id', $pharmacyId)
+                ->value('quantity');
 
-        $medicineName = Medicine::where('id', $medicineId)->value('trade_name');
+            $medicineName = Medicine::where('id', $medicineId)->value('trade_name');
 
+
+            return [
+                'medicineName' => $medicineName,
+                'newQuantity' => $newQuantity
+            ];
+        });
         return response()->json([
-            'medicine' => $medicineName,
+            'medicine'          => $data['medicineName'],
             'previous_quantity' => $previousQuantity,
-            'new_quantity' => $newQuantity
+            'new_quantity'      => $data['newQuantity']
         ]);
     }
 
