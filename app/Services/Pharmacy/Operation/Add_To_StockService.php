@@ -12,12 +12,13 @@ class Add_To_StockService
             'medicine_id' => $item['medicine_id'],
             'pharmacy_id' => $pharmacyId,
             'batch' => $item['batch'],
+            'expiration_date' => $item['expiration_date'],
         ],
             [
                 'quantity' => $item['quantity'],
                 'Purchase_price' => $item['Purchase_price'],
                 'sale_price' => $item['sale_price'],
-                'expiration_date' => $item['expiration_date'],
+
             ]);
 
     }
