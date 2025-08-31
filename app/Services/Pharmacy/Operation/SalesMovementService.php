@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 class SalesMovementService
 {
-    public function createWithEarliestBatch(int $pharmacyId, int $userId, int $medicineId, int $quantity, $batch): StockMovement
+    public function createWithEarliestBatch(int $pharmacyId, int $userId, int $medicineId, int $quantity, $batch,$invoice_id): StockMovement
     {
-        return DB::transaction(function () use ($pharmacyId, $userId, $medicineId, $quantity, $batch) {
+        return DB::transaction(function () use ($invoice_id, $pharmacyId, $userId, $medicineId, $quantity, $batch) {
             $stock = PharmacyStock::where('pharmacy_id', $pharmacyId)
                 ->where('medicine_id', $medicineId)
                 ->where('batch', $batch)
@@ -32,6 +32,7 @@ class SalesMovementService
                 'user_id' => $userId,
                 'quantity' => $quantity,
                 'batch' => $batch,
+                'invoice_id'=>$invoice_id
             ]);
 
             UpdatePharmacyStockJob::dispatch($movement);

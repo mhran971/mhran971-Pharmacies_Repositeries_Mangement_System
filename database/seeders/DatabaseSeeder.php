@@ -27,10 +27,20 @@ class DatabaseSeeder extends Seeder
         $this->command->info('   Medicines Importing...');
 
         $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
+            RepositorySeeder::class,
+            RepositoryUserSeeder::class,
+            PermissionsSeeder::class,
+            RepositoryUserPermissionsSeeder::class,
+            Pharmaceutical_FormSeeder::class,
+            LaboratorySeeder::class,
             PharmacySeeder::class,
             PharmacyUserSeeder::class,
+            InvoiceSeeder::class,
             SalesMovementSeeder::class,
             PharmacyStockSeeder::class,
+            PharmacyUserPermissionSeeder::class,
         ]);
     }
 }
