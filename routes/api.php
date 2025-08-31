@@ -76,6 +76,9 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
         Route::get('/get-permissions/{lang}', 'get_all_permissions');
         Route::get('/all-users', 'get_all_users');
         Route::get('/My-Pharmacists', 'My_Pharmacists');
+        Route::post('/delete-MyPharmacists/{id}', 'delete_MyPharmacists');
+        Route::get('/get-permissions/Pharmacist/{id}', 'My_Pharmacist_Permissions');
+        Route::get('/get-MyPermissions', 'get_MyPermissions');
         Route::post('/assignOrUpdate-Permissions/{user_id}', 'assignOrUpdatePermissions');
     });
 
@@ -161,7 +164,3 @@ Route::get('/get/medbyForm_id/{Pharmaceutical_Form_id}', function (string $Pharm
     ')
         ->where('Pharmaceutical_Form_id', $Pharmaceutical_Form_id)->get();
 });
-
-
-
-

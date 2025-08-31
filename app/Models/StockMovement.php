@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rules\In;
 
 class StockMovement extends Model
 {
@@ -12,6 +13,7 @@ class StockMovement extends Model
         'user_id',
         'quantity',
         'batch',
+        'invoice_id'
     ];
 
     public function medicine()
@@ -19,6 +21,10 @@ class StockMovement extends Model
         return $this->belongsTo(Medicine::class);
     }
 
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
     public function pharmacy()
     {
         return $this->belongsTo(Pharmacy::class);

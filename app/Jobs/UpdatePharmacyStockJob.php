@@ -22,8 +22,7 @@ class UpdatePharmacyStockJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            // جلب المخزون بناءً على الدواء والصيدلية والدفعة
-            $stock = PharmacyStock::where('medicine_id', $this->movements->medicine_id)
+             $stock = PharmacyStock::where('medicine_id', $this->movements->medicine_id)
                 ->where('pharmacy_id', $this->movements->pharmacy_id)
                 ->where('batch', $this->movements->batch)
                 ->lockForUpdate()
@@ -40,8 +39,7 @@ class UpdatePharmacyStockJob implements ShouldQueue
                 throw new \Exception("لا يمكن الخصم من '{$stock->medicine->trade_name}': الكمية المطلوبة ({$this->movements->quantity}) أكبر من المتوفرة ({$stock->quantity}).");
             }
 
-            // خصم الكمية
-            $stock->decrement('quantity', $this->movements->quantity);
+             $stock->decrement('quantity', $this->movements->quantity);
         } catch (\Exception $e) {
             \Log::error('UpdatePharmacyStockJob failed', [
                 'movement_id' => $this->movements->id ?? null,

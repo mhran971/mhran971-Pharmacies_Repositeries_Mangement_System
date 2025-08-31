@@ -21,7 +21,10 @@ class Pharmacy_User extends Model
         return $this->belongsTo(User::class);
     }
 
-
+    public function pharmacyUsers()
+    {
+        return $this->hasMany(Pharmacy_User::class, 'user_id');
+    }
     public function pharmacies(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Pharmacy::class);
@@ -34,4 +37,19 @@ class Pharmacy_User extends Model
             'pharmacy_user_id',
             'permission_id');
     }
+    public function permissions()
+    {
+        return $this->hasMany(PharmacyUserPermission::class, 'pharmacy_user_id');
+    }
+
+    public function pharmacy()
+    {
+        return $this->belongsTo(Pharmacy::class, 'pharmacy_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }

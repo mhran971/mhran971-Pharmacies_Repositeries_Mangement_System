@@ -12,7 +12,7 @@ class PharmacyUserSeeder extends Seeder
     public function run(): void
     {
         $pharmacies = Pharmacy::inRandomOrder()->take(10)->get();
-        $users = User::inRandomOrder()->take(10)->get();
+        $users = User::inRandomOrder()->take(20)->get()->unique();
 
         foreach ($pharmacies as $pharmacy) {
             $user = $users->random();

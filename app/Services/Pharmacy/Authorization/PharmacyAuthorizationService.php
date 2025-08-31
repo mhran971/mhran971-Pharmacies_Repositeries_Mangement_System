@@ -6,6 +6,7 @@ use App\Http\Requests\Pharmacy\Authorization\Assign_PermissionRequest;
 use App\Models\Permission;
 use App\Models\Pharmacy;
 use App\Models\Pharmacy_User;
+use App\Models\PharmacyUserPermission;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +25,17 @@ class PharmacyAuthorizationService
         return $allUsers;
     }
 
+    public function MyPermissions()
+    {
+        $user = Auth::user();
+
+        $pharmacyUserIds = Pharmacy_User::where('user_id', $user->id)->pluck('id');
+        $permissionIds = PharmacyUserPermission::whereIn('pharmacy_user_id', $pharmacyUserIds)
+            ->pluck('permission_id');
+        return $permissions = Permission::whereIn('id', $permissionIds)->get();
+
+    }
+
     public function get_myPharmacists()
     {
 
@@ -32,6 +44,41 @@ class PharmacyAuthorizationService
         $user_ids = Pharmacy_User::whereIn('pharmacy_id', $pharmacy_ids)->pluck('user_id')->toarray();
         return $users = User::whereIn('id', $user_ids)->get();
 
+    }
+
+    public function delete_MyPharmacists($Pharmacist_id)
+    {
+        $owner = Auth::user();
+
+        $pharmacy_id = Pharmacy::where('owner_id', $owner->id)->value('id');
+
+        $pharmacyUser = Pharmacy_User::where('user_id', $Pharmacist_id)
+            ->where('pharmacy_id', $pharmacy_id)
+            ->first();
+
+        if ($pharmacyUser) {
+            $pharmacyUser->delete();
+        } else {
+            return "The Pharmacist already hasn't exist in your pharmacy!";
+        }
+
+        $user = User::find($Pharmacist_id);
+
+        return "The Pharmacist {$user?->name} has been removed from your pharmacy successfully";
+    }
+
+
+    public function get_Pharmacist_permissions_perId($pharmacist_id)
+    {
+        $user = Auth::user();
+
+        $pharmacyIds = Pharmacy::where('owner_id', $user->id)->pluck('id');
+        $pharmacyUserIds = Pharmacy_User::whereIn('pharmacy_id', $pharmacyIds)
+            ->where('user_id', $pharmacist_id)
+            ->pluck('id');
+        $pharmacistPermissions = PharmacyUserPermission::whereIn('pharmacy_user_id', $pharmacyUserIds)
+            ->pluck('permission_id');
+        return $pharmacistPermissions;
     }
 
     public function get_permissions($lang): \Illuminate\Support\Collection

@@ -12,4 +12,10 @@ class PharmacyUserPermission extends Model
         'permission_id',
         'pharmacy_User_id'
     ];
+
+    public function pharmacyUser()
+    {
+        return $this->belongsTo(Pharmacy_User::class, 'pharmacy_user_id');
+    }
+
 }

@@ -21,6 +21,10 @@ class Pharmacy extends Model
     {
         return $this->belongsToMany(User::class, 'pharmacy_users');
     }
+    public function users()
+    {
+        return $this->hasMany(Pharmacy_User::class, 'pharmacy_id');
+    }
 
     public function movements()
     {
