@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Operation;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pharmacy\Operations\BulkSalesMovementRequest;
 use App\Jobs\UpdatePharmacyStockJob;
+use App\Models\Invoice;
+use App\Models\PharmacyStock;
 use App\Services\Pharmacy\Operation\SalesMovementService as OperationSalesMovementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,10 +43,23 @@ class SalesMovementController extends Controller
 
         $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
         $items = $validated['items'];
+        $totalSum = 0;
+        foreach ($items as $item) {
+            $price = PharmacyStock::where('medicine_id', $item['medicine_id'])
+                ->where('pharmacy_id', $pharmacyId)
+                ->where('batch', $item['batch'])
+                ->value('sale_price');
+
+            $totalSum += $price * $item['quantity'];
+        }
 
         $movements = [];
         $errors = [];
-
+            $invoice = Invoice::create([
+                'pharmacy_id'=>$pharmacyId,
+                'user_id'=>$user->id,
+                'total_sum' =>$totalSum,
+            ]);
         foreach ($items as $item) {
             try {
                 $movement = $this->service->createWithEarliestBatch(
@@ -53,6 +68,7 @@ class SalesMovementController extends Controller
                     $item['medicine_id'],
                     $item['quantity'],
                     $item['batch'],
+                    $invoice->id
                 );
                 $movements[] = $movement;
             } catch (\Exception $e) {
@@ -72,7 +88,7 @@ class SalesMovementController extends Controller
                 'errors' => $errors,
             ], 422);
         }
-        UpdatePharmacyStockJob::dispatch($movement);
+//        UpdatePharmacyStockJob::dispatch($movement);
 
         return response()->json(['data' => $movements], 201);
     }

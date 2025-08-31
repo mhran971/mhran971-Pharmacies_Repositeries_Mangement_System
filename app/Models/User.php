@@ -4,7 +4,8 @@
 
     use Illuminate\Contracts\Auth\MustVerifyEmail;
     use Illuminate\Database\Eloquent\Factories\HasFactory;
-    use Illuminate\Database\Eloquent\Relations\HasOne;
+    use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
     use Illuminate\Foundation\Auth\User as Authenticatable;
     use Illuminate\Notifications\Notifiable;
     use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -57,12 +58,18 @@
             return $this->belongsToMany(Repository::class, 'repository_users');
         }
 
-        public function pharmacy_owner(): HasOne
-        {
-            return $this->hasOne(Pharmacy::class, 'owner_id');
-        }
+    public function pharmacy_owner(): HasOne
+    {
+        return $this->hasOne(Pharmacy::class, 'owner_id');
+    }
 
-        public function Pharmacist(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function pharmacies(): HasMany
+    {
+        return $this->hasMany(Pharmacy::class, 'owner_id');
+    }
+
+    public function Pharmacist(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+
         {
             return $this->belongsToMany(Repository::class, 'pharmacy_users');
         }
