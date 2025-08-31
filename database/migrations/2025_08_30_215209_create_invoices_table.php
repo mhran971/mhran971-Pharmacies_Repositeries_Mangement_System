@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('pharmacy_id');
             $table->string('user_id');
+            $table->string('costumer_fullName')->default('');
+            $table->string('National_number')->default('');
+            $table->double('invoice_num');
             $table->double('total_sum');
+            $table->boolean('Psychiatric')->default(0);
             $table->timestamps();
         });
 

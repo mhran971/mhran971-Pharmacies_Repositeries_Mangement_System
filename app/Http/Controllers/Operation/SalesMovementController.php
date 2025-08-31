@@ -10,6 +10,7 @@ use App\Models\PharmacyStock;
 use App\Services\Pharmacy\Operation\SalesMovementService as OperationSalesMovementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SalesMovementController extends Controller
 {
@@ -38,58 +39,79 @@ class SalesMovementController extends Controller
 
     public function bulkStore(BulkSalesMovementRequest $request)
     {
-        $validated = $request->validated();
-        $user = Auth::user();
-
-        $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
-        $items = $validated['items'];
-        $totalSum = 0;
-        foreach ($items as $item) {
-            $price = PharmacyStock::where('medicine_id', $item['medicine_id'])
-                ->where('pharmacy_id', $pharmacyId)
-                ->where('batch', $item['batch'])
-                ->value('sale_price');
-
-            $totalSum += $price * $item['quantity'];
-        }
-
         $movements = [];
         $errors = [];
-            $invoice = Invoice::create([
-                'pharmacy_id'=>$pharmacyId,
-                'user_id'=>$user->id,
-                'total_sum' =>$totalSum,
-            ]);
-        foreach ($items as $item) {
-            try {
-                $movement = $this->service->createWithEarliestBatch(
-                    $pharmacyId,
-                    $user->id,
-                    $item['medicine_id'],
-                    $item['quantity'],
-                    $item['batch'],
-                    $invoice->id
-                );
-                $movements[] = $movement;
-            } catch (\Exception $e) {
-                $medicine = \App\Models\Medicine::find($item['medicine_id']);
-                $errors[] = [
-                    'medicine_id' => $item['medicine_id'],
-                    'medicine_name' => $medicine->trade_name ?? 'Unknown medicine',
-                    'requested_quantity' => $item['quantity'],
-                    'message' => $e->getMessage(),
-                ];
+
+        try {
+            DB::transaction(function () use ($request, &$movements, &$errors) {
+                $user = Auth::user();
+                $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
+                $items = $request->validated()['items'];
+                $totalSum = 0;
+
+                foreach ($items as $item) {
+                    $price = PharmacyStock::where('medicine_id', $item['medicine_id'])
+                        ->where('pharmacy_id', $pharmacyId)
+                        ->where('batch', $item['batch'])
+                        ->value('sale_price');
+
+                    $totalSum += $price * $item['quantity'];
+                }
+
+                $invoice = Invoice::create([
+                    'National_number' => $request->National_number ?? '',
+                    'invoice_num' => $request->invoice_num ?? '',
+                    'costumer_fullName' => $request->costumer_fullName ?? '',
+                    'Psychiatric' => $request->Psychiatric ?? 0,
+                    'pharmacy_id' => $pharmacyId,
+                    'user_id' => $user->id,
+                    'total_sum' => $totalSum,
+                ]);
+
+                foreach ($items as $item) {
+                    try {
+                        $movement = $this->service->createWithEarliestBatch(
+                            $pharmacyId,
+                            $user->id,
+                            $item['medicine_id'],
+                            $item['quantity'],
+                            $item['batch'],
+                            $invoice->id
+                        );
+                        $movements[] = $movement;
+                    } catch (\Exception $e) {
+                        $medicine = \App\Models\Medicine::find($item['medicine_id']);
+                        $errors[] = [
+                            'medicine_id' => $item['medicine_id'],
+                            'medicine_name' => $medicine->trade_name ?? 'دواء غير معروف',
+                            'requested_quantity' => $item['quantity'],
+                            'message' => $e->getMessage(),
+                        ];
+                    }
+                }
+
+                if (!empty($errors)) {
+                     throw new \Exception();
+                }
+            });
+
+            if (!empty($errors)) {
+                return response()->json([
+                    'message' => 'بعض الأدوية غير متوفرة بالكميات المطلوبة.',
+                    'errors' => $errors,
+                ], 422);
             }
-        }
 
-        if (!empty($errors)) {
-            return response()->json([
-                'message' => 'Some medications are not available in the required quantities.',
-                'errors' => $errors,
-            ], 422);
-        }
-//        UpdatePharmacyStockJob::dispatch($movement);
+//             foreach ($movements as $movement) {
+//                UpdatePharmacyStockJob::dispatch($movement);
+//            }
 
-        return response()->json(['data' => $movements], 201);
+            return response()->json(['data' => $movements], 201);
+
+        } catch (\Exception $e) {
+             return response()->json([
+                'message' => 'An error occurred during the process of processing.',
+            ], 500);
+        }
     }
 }

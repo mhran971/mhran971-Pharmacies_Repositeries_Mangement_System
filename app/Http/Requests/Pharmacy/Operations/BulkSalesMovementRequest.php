@@ -14,8 +14,10 @@ class BulkSalesMovementRequest extends FormRequest
     public function rules(): array
     {
         return [
-//            'user_id' => 'required|exists:users,id',
-//            'pharmacy_id' => 'required|exists:pharmacies,id',
+            'National_number' => 'nullable|string',
+            'costumer_fullName' => 'nullable|string',
+            'invoice_num' => 'required|numeric',
+            'Psychiatric' => 'nullable|boolean|in:0,1',
             'items' => 'required|array|min:1',
             'items.*.medicine_id' => 'required|exists:medicines,id',
             'items.*.quantity' => 'required|integer|min:1',
@@ -26,10 +28,10 @@ class BulkSalesMovementRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'معرف المستخدم مطلوب.',
-            'user_id.exists' => 'المستخدم غير موجود.',
-            'pharmacy_id.required' => 'معرف الصيدلية مطلوب.',
-            'pharmacy_id.exists' => 'الصيدلية غير موجودة.',
+//            'user_id.required' => 'معرف المستخدم مطلوب.',
+//            'user_id.exists' => 'المستخدم غير موجود.',
+//            'pharmacy_id.required' => 'معرف الصيدلية مطلوب.',
+//            'pharmacy_id.exists' => 'الصيدلية غير موجودة.',
             'items.required' => 'قائمة الأدوية مطلوبة.',
             'items.*.medicine_id.required' => 'معرف الدواء مطلوب.',
             'items.*.medicine_id.exists' => 'الدواء غير موجود.',

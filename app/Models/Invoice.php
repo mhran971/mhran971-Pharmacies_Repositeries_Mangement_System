@@ -8,8 +8,12 @@ class Invoice extends Model
 {
     protected $fillable = [
         'pharmacy_id',
+        'invoice_num',
+        'costumer_fullName',
+        'National_number',
         'user_id',
-        'total_sum'
+        'total_sum',
+        'Psychiatric'
 
     ];
 

@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $excelPath = storage_path('app/public/MedicineExcel/medicines.xlsx');
-        Excel::import(new MedicinesImport, $excelPath);
         $this->command->info('   Medicines Importing...');
+        Excel::import(new MedicinesImport, $excelPath);
 
         $this->call([
             RoleSeeder::class,
