@@ -21,7 +21,7 @@ class Medicine extends Model
 
     public function laboratory(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Laboratory::class);
+        return $this->belongsTo(laboratory::class);
     }
 
     public function pharmaceuticalForm(): \Illuminate\Database\Eloquent\Relations\BelongsTo
