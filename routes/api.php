@@ -164,3 +164,7 @@ Route::get('/get/medbyForm_id/{Pharmaceutical_Form_id}', function (string $Pharm
     ')
         ->where('Pharmaceutical_Form_id', $Pharmaceutical_Form_id)->get();
 });
+
+
+
+
