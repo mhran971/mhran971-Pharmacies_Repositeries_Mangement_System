@@ -71,23 +71,23 @@ class PharmacyStockController extends Controller
         foreach ($items as $item) {
             $medicineId = $item['medicine_id'];
 
-            if (in_array($medicineId, $existingStockIds)) {
-                $skipped[] = [
-                    'medicine_id' => $medicineId,
-                    'medicine_name' => $medicinesMap[$medicineId] ?? null,
-                    'reason' => 'Already exists in stock'
-                ];
-                continue;
-            }
-
-            if (in_array($medicineId, $seenInRequest)) {
-                $skipped[] = [
-                    'medicine_id' => $medicineId,
-                    'medicine_name' => $medicinesMap[$medicineId] ?? null,
-                    'reason' => 'Duplicate in request'
-                ];
-                continue;
-            }
+//            if (in_array($medicineId, $existingStockIds)) {
+//                $skipped[] = [
+//                    'medicine_id' => $medicineId,
+//                    'medicine_name' => $medicinesMap[$medicineId] ?? null,
+//                    'reason' => 'Already exists in stock'
+//                ];
+//                continue;
+//            }
+//
+//            if (in_array($medicineId, $seenInRequest)) {
+//                $skipped[] = [
+//                    'medicine_id' => $medicineId,
+//                    'medicine_name' => $medicinesMap[$medicineId] ?? null,
+//                    'reason' => 'Duplicate in request'
+//                ];
+//                continue;
+//            }
 
             $seenInRequest[] = $medicineId;
 
@@ -96,7 +96,7 @@ class PharmacyStockController extends Controller
 
         return response()->json([
             'added' => $stocks,
-            'skipped' => $skipped
+//            'skipped' => $skipped
         ]);
     }
 
