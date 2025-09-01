@@ -73,12 +73,16 @@ class PharmacyAuthorizationService
         $user = Auth::user();
 
         $pharmacyIds = Pharmacy::where('owner_id', $user->id)->pluck('id');
-        $pharmacyUserIds = Pharmacy_User::whereIn('pharmacy_id', $pharmacyIds)
+         $pharmacyUserIds = Pharmacy_User::where('pharmacy_id', $pharmacyIds)
             ->where('user_id', $pharmacist_id)
-            ->pluck('id');
-        $pharmacistPermissions = PharmacyUserPermission::whereIn('pharmacy_user_id', $pharmacyUserIds)
-            ->pluck('permission_id');
-        return $pharmacistPermissions;
+            ->with(['user_pharmacy_permissions'])->get();
+         if(filled($pharmacyUserIds)){
+             return $pharmacyUserIds;
+         }
+         else return response()->json(404,'there is no user !!');
+//        $pharmacistPermissions = PharmacyUserPermission::whereIn('pharmacy_user_id', $pharmacyUserIds)
+//            ->pluck('permission_id');
+//         $pharmacistPermissions;
     }
 
     public function get_permissions($lang): \Illuminate\Support\Collection

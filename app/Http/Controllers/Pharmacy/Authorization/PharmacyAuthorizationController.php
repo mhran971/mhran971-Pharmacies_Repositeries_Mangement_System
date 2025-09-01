@@ -6,6 +6,8 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Pharmacy\Authorization\Assign_PermissionRequest;
 use App\Models\User;
 use App\Services\Pharmacy\Authorization\PharmacyAuthorizationService;
+use function Laravel\Prompts\error;
+use function PHPUnit\Framework\throwException;
 
 class PharmacyAuthorizationController extends BaseController
 {
@@ -51,12 +53,20 @@ class PharmacyAuthorizationController extends BaseController
     }
     public function My_Pharmacist_Permissions($id)
     {
-        $data = $this->pharmacyAuthorizationService->get_Pharmacist_permissions_perId($id);
-        if ($data)
-            return $this->sendResponse($data,);
-        else
-            $this->sendError('Something got wrong at getting your Pharmacists Permissions !');
+        try {
+            $data = $this->pharmacyAuthorizationService->get_Pharmacist_permissions_perId($id);
+
+            if ($data) {
+                return $this->sendResponse($data, 'Pharmacist permissions retrieved successfully');
+            }
+
+            return $this->sendError('There is no user !!', 404);
+
+        } catch (\Exception $e) {
+            return $this->sendError('Something went wrong at getting your Pharmacist Permissions !', 500);
+        }
     }
+
 
     public function get_all_permissions($lang)
     {
