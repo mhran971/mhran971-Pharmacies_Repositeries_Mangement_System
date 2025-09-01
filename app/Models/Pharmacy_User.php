@@ -14,12 +14,15 @@ class Pharmacy_User extends Model
         'role',
         'is_work'
     ];
+//    public function user(): \Illuminate\Database\Eloquent\Relations\hasMany
+//    {
+//        return $this->hasMany(User::class, 'user_id');
+//    }
 
-
-    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+//    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+//    {
+//        return $this->belongsTo(User::class);
+//    }
 
     public function pharmacyUsers()
     {

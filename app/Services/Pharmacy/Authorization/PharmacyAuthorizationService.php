@@ -41,8 +41,8 @@ class PharmacyAuthorizationService
 
         $user = Auth::user();
         $pharmacy_ids = Pharmacy::where('owner_id', $user->id)->pluck('id')->toarray();
-        $user_ids = Pharmacy_User::whereIn('pharmacy_id', $pharmacy_ids)->pluck('user_id')->toarray();
-        return $users = User::whereIn('id', $user_ids)->get();
+        return $user_ids = Pharmacy_User::whereIn('pharmacy_id', $pharmacy_ids)->where('is_work',1)->with('user')->get();
+//         $users = User::whereIn('id', $user_ids)->get();
 
     }
 
