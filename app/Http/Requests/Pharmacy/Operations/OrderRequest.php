@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Pharmacy\Operations;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddMedicineRequest extends FormRequest
+class OrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +22,13 @@ class AddMedicineRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'repository_id' => 'required|exists:repositories,id',
             'items' => 'required|array|min:1',
-            'items.*.medicine_id' => 'required|exists:medicines,id',//unique:Pharmacy_Stocks,medicine_id
+            'items.*.medicine_id' => 'required|exists:medicines,id',
             'items.*.quantity' => 'required|integer|min:1',
-            'items.*.batch' => 'required|string',
-            'items.*.Purchase_price' => 'required|min:1',
-            'items.*.sale_price' => 'required|min:1',
-            'items.*.expiration_date' => 'required|date',
+            'items.*.price' => 'nullable|numeric|min:0',
+            'items.*.batch' => 'nullable|string',
+            'items.*.expiration_date' => 'nullable|date',
         ];
     }
 }

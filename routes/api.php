@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Operation\OrderController;
 use App\Http\Controllers\Operation\PharmacyStockController;
 use App\Http\Controllers\Operation\SalesMovementController;
 use App\Http\Controllers\Pharmacy\Auth\ForgotPasswordController;
@@ -91,7 +92,13 @@ Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
     Route::post('/pharmacy-stocks/returned_medicine', [PharmacyStockController::class, 'Returned_Medicine']);
 
 });
+Route::middleware('auth:api')->prefix('Pharmacy/Order')->controller(OrderController::class)->group(function () {
+    Route::get('/my-Order',  'myOrder');
+    Route::get('/get-orderItems/{id}',  'get_order_perId');
+    Route::post('/demand-Order',  'demand_Order');
+    Route::post('/updateOrderStatus/{id}' , 'updateOrderStatus');
 
+});
 
 /*                =============================
                   ||        General API         ||

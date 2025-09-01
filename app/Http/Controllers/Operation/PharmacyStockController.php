@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Operation;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AddMedicineRequest;
-use App\Http\Requests\ReturnedMedicineRequest;
+use App\Http\Requests\Pharmacy\Operations\AddMedicineRequest;
+use App\Http\Requests\Pharmacy\Operations\ReturnedMedicineRequest;
 use App\Models\Medicine;
 use App\Models\PharmacyStock;
 use App\Models\StockMovement;
