@@ -17,7 +17,7 @@ class Add_To_StockService
             [
                 'quantity' => $item['quantity'],
                 'Purchase_price' => $item['Purchase_price'],
-                'sale_price' => $item['sale_price'],
+                'sale_price' => $item['sale_price'] ?? round($item['Purchase_price'] + ($item['Purchase_price'] * 0.12), -3),
 
             ]);
 

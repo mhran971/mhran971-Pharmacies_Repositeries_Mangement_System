@@ -27,7 +27,7 @@ class AddMedicineRequest extends FormRequest
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.batch' => 'required|string',
             'items.*.Purchase_price' => 'required|min:1',
-            'items.*.sale_price' => 'required|min:1',
+            'items.*.sale_price' => 'nullable|min:1',
             'items.*.expiration_date' => 'required|date',
         ];
     }
