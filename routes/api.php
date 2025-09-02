@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Operation\InventoryController;
 use App\Http\Controllers\Operation\OrderController;
 use App\Http\Controllers\Operation\PharmacyStockController;
 use App\Http\Controllers\Operation\SalesMovementController;
@@ -97,6 +98,18 @@ Route::middleware('auth:api')->prefix('Pharmacy/Order')->controller(OrderControl
     Route::get('/get-orderItems/{id}',  'get_order_perId');
     Route::post('/demand-Order',  'demand_Order');
     Route::post('/updateOrderStatus/{id}' , 'updateOrderStatus');
+
+});
+
+Route::middleware('auth:api')->prefix('Pharmacy/Inventory')->controller( InventoryController::class)->group(function () {
+     Route::get('/daily-Sales',  'dailySalesSummary');
+    Route::get('/weekly-sales',  'weeklySalesSummary');
+    Route::get('/monthly-sales',  'monthlySalesSummary');
+
+    Route::get('/daily-Profit',  'dailyProfit');
+    Route::get('/weekly-Profit',  'weeklyProfit');
+    Route::get('/monthly-Profit',  'monthlyProfit');
+
 
 });
 
