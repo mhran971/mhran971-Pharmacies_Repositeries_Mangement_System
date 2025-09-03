@@ -21,4 +21,14 @@ class Invoice extends Model
     {
         return $this->hasMany(StockMovement::class);
     }
+
+    public function pharmacy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Pharmacy::class);
+    }
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

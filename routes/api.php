@@ -102,13 +102,17 @@ Route::middleware('auth:api')->prefix('Pharmacy/Order')->controller(OrderControl
 });
 
 Route::middleware('auth:api')->prefix('Pharmacy/Inventory')->controller( InventoryController::class)->group(function () {
-     Route::get('/daily-Sales',  'dailySalesSummary');
-    Route::get('/weekly-sales',  'weeklySalesSummary');
-    Route::get('/monthly-sales',  'monthlySalesSummary');
+    Route::get('/daily-Sales', 'dailySalesSummary');
+    Route::get('/weekly-sales', 'weeklySalesSummary');
+    Route::get('/monthly-sales', 'monthlySalesSummary');
 
-    Route::get('/daily-Profit',  'dailyProfit');
-    Route::get('/weekly-Profit',  'weeklyProfit');
-    Route::get('/monthly-Profit',  'monthlyProfit');
+    Route::get('/daily-Profit', 'dailyProfit');
+    Route::get('/weekly-Profit', 'weeklyProfit');
+    Route::get('/monthly-Profit', 'monthlyProfit');
+
+    Route::get('/dailySales-Chart', 'dailySalesChart');
+    Route::get('/weeklySales-Chart', 'weeklySalesChart');
+    Route::get('/monthlySales-Chart', 'monthlySalesChart');
 
 
 });

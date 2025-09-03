@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Operation;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Contracts\Providers\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class InventoryController extends Controller
@@ -303,5 +302,48 @@ class InventoryController extends Controller
         return response()->json([
             'monthly Profit ' => $monthlyProfit,]);
     }
+
+    public function dailySalesChart()
+    {
+        $sales = DB::table('invoices')
+            ->selectRaw('DATE(created_at) as date, DAYNAME(created_at) as day_name, SUM(total_sum) as total')
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->groupBy('date', 'day_name')
+            ->orderBy('date')
+            ->get();
+
+
+        return response()->json($sales);
+    }
+
+    public function weeklySalesChart()
+    {
+        $sales = DB::table('invoices')
+            ->selectRaw('WEEK(created_at, 1) as week_number, SUM(total_sum) as total')
+            ->where('created_at', '>=', Carbon::now()->subWeeks(12))
+            ->groupBy('week_number')
+            ->orderBy('week_number')
+            ->get()
+            ->map(function ($item) {
+                $item->label = "Week " . $item->week_number;
+                return $item;
+            });
+
+        return response()->json($sales);
+    }
+
+    public function monthlySalesChart()
+    {
+        $sales = DB::table('invoices')
+            ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month_key, MONTHNAME(created_at) as month_name, SUM(total_sum) as total')
+            ->where('created_at', '>=', Carbon::now()->subYear())
+            ->groupBy('month_key', 'month_name')
+            ->orderBy('month_key')
+            ->get();
+
+        return response()->json($sales);
+    }
+
+
 }
 
