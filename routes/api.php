@@ -78,6 +78,7 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
         Route::get('/get-permissions/{lang}', 'get_all_permissions');
         Route::get('/all-users', 'get_all_users');
         Route::get('/My-Pharmacists', 'My_Pharmacists');
+        Route::get('/My_Pharmacist-with-Permissions', 'My_PharmacistwithPermissions');
         Route::post('/delete-MyPharmacist/{id}', 'delete_MyPharmacists');
         Route::get('/get-permissions/Pharmacist/{id}', 'My_Pharmacist_Permissions');
         Route::get('/get-MyPermissions', 'get_MyPermissions');

@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pharmacy_id')->constrained('pharmacies')->cascadeOnDelete();
-            $table->foreignId('repository_id')->constrained('repositories')->cascadeOnDelete();
-            $table->enum('status', [ 'pending', 'approved', 'rejected', 'delivered', 'canceled'])->default('pending');
+            $table->foreignId('pharmacy_id')->constrained('pharmacies')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('repository_id')->constrained('repositories')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('order_num');
+            $table->enum('status',
+                ['pending', 'approved', 'rejected', 'delivered', 'canceled'])->default('pending');
             $table->decimal('total_price', 12, 2)->nullable();
             $table->timestamps();
         });

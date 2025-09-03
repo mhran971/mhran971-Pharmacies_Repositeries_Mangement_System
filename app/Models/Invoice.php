@@ -31,4 +31,11 @@ class Invoice extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function owner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+
 }

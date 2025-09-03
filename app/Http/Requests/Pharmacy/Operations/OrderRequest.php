@@ -29,6 +29,7 @@ class OrderRequest extends FormRequest
             'items.*.price' => 'nullable|numeric|min:0',
             'items.*.batch' => 'nullable|string',
             'items.*.expiration_date' => 'nullable|date',
+            'user_id' => 'nullable',
         ];
     }
 }

@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Operation;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Pharmacy\Operations\OrderRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends BaseController
 {
+    /**
+     * @throws \Exception
+     */
     public function demand_Order(OrderRequest $request)
     {
 //        $data = $request->validated();
@@ -25,10 +27,12 @@ class OrderController extends BaseController
 
 
         $order = Order::create([
-            'pharmacy_id'   => $pharmacyId,
+            'user_id' => $user->id,
+            'pharmacy_id' => $pharmacyId,
             'repository_id' => $request['repository_id'],
-            'status'        => 'pending',
-            'total_price'   => collect($request['items'])->sum(fn($item) => $item['quantity'] * ($item['price'] ?? 0)),
+            'status' => 'pending',
+            'order_num' => random_int(10000, 99999),
+            'total_price' => collect($request['items'])->sum(fn($item) => $item['quantity'] * ($item['price'] ?? 0)),
         ]);
 
         foreach ($request['items'] as $item) {
