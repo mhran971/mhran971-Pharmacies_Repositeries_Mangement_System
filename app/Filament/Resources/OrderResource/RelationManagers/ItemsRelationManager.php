@@ -39,17 +39,21 @@ class ItemsRelationManager extends RelationManager
                         $set('total_price', $state * $get('quantity'));
                     }),
 
+
+
+                Forms\Components\TextInput::make('batch'),
+
+
+                Forms\Components\DatePicker::make('expiration_date')
+                    ->label('Expiration Date')
+                    ->required(),
+
                 Forms\Components\TextInput::make('total_price')
                     ->label('Total Price')
                     ->disabled()
                     ->dehydrated(false),
-
-
-                Forms\Components\TextInput::make('batch')
-                    ->required(),
-
-                Forms\Components\DatePicker::make('expiration_date')
-                    ->label('Expiration Date')
+                Forms\Components\TextInput::make('paid'),
+                Forms\Components\TextInput::make('remaining')
                     ->required(),
             ]);
     }

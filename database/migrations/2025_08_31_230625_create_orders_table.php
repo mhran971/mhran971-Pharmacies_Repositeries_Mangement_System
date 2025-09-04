@@ -20,6 +20,8 @@ return new class extends Migration
             $table->enum('status',
                 ['pending', 'approved', 'rejected', 'delivered', 'canceled'])->default('pending');
             $table->decimal('total_price', 12, 2)->nullable();
+            $table->decimal('paid', 12, 2)->nullable();
+            $table->decimal('remaining', 12, 2)->nullable();
             $table->timestamps();
         });
     }

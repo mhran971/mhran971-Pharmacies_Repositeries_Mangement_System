@@ -13,6 +13,8 @@ class Order extends Model
         'order_num',
         'status',
         'total_price',
+        'paid',
+        'remaining',
     ];
 
     public function pharmacy()
