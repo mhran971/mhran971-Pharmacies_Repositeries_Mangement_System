@@ -41,6 +41,8 @@ class DatabaseSeeder extends Seeder
             SalesMovementSeeder::class,
             PharmacyStockSeeder::class,
             PharmacyUserPermissionSeeder::class,
+            RepositoryStockSeeder::class,
+
         ]);
     }
 }
