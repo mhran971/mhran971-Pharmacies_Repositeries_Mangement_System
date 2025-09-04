@@ -32,7 +32,7 @@ class OrderController extends BaseController
             'repository_id' => $request['repository_id'],
             'status' => 'pending',
             'order_num' => random_int(10000, 99999),
-            'total_price' => collect($request['items'])->sum(fn($item) => $item['quantity'] * ($item['price'] ?? 0)),
+            'total_price' => 0//collect($request['items'])->sum(fn($item) => $item['quantity'] * ($item['price'] ?? 0)),
         ]);
 
         foreach ($request['items'] as $item) {

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OrderResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -40,22 +41,42 @@ class ItemsRelationManager extends RelationManager
                     }),
 
 
-
                 Forms\Components\TextInput::make('batch'),
 
 
                 Forms\Components\DatePicker::make('expiration_date')
                     ->label('Expiration Date')
                     ->required(),
-
-                Forms\Components\TextInput::make('total_price')
+//
+//                Forms\Components\TextInput::make('total_price')
+//                    ->label('Total Price')
+//                    ->disabled()
+//                    ->dehydrated(false),
+//                Forms\Components\TextInput::make('paid'),
+//                Forms\Components\TextInput::make('remaining')
+//                    ->afterStateUpdated(function ($state, $set, $get) {
+//                    $set('remaining', $state - $get('paid'));
+//                }),
+                TextInput::make('total_price')
                     ->label('Total Price')
-                    ->disabled()
-                    ->dehydrated(false),
-                Forms\Components\TextInput::make('paid'),
-                Forms\Components\TextInput::make('remaining')
-                    ->required(),
-            ]);
+                    ->disabled(),
+
+                TextInput::make('paid')
+                    ->afterStateUpdated(function ($state, $set, $get) {
+                        $set('remaining', $get('total_price') - $state);
+                    }),
+
+                TextInput::make('remaining')->disabled(),
+            ])
+            ->afterSave(function ($record, $data) {
+                // $record هنا هو Order model بعد الحفظ
+                $total = $record->items()->sum(fn($item) => $item->quantity * $item->price);
+                $record->update([
+                    'total_price' => $total,
+                    // إذا أردت، يمكنك إعادة حساب remaining هنا أيضًا
+                    'remaining'   => $total - $record->paid,
+                ]);
+            });
     }
 
     public function table(Table $table): Table
@@ -99,6 +120,7 @@ class ItemsRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('total_price')
                     ->label('Total Price')->disabled(),
+
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()

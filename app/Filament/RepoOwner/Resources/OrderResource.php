@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class OrderResource extends Resource
@@ -24,18 +25,13 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('id')
-                    ->label('Id')
-                    ->disabled(),
+                TextInput::make('id')->label('Id')->disabled(),
 
                 TextInput::make('order_num')
                     ->label('Invoice num')
+                    ->searchable()
                     ->required(),
-                TextInput::make('total_price')
-                    ->label('Total Price')
-                    ,
-//                    ->getStateUsing(fn($record) => $record->quantity * $record->purchase_price)
-//                    ->summarize(fn ($records) => $records->sum(fn ($item) => $item->quantity * $item->purchase_price)),
+
                 Select::make('pharmacy_id')
                     ->options(fn() => cache()
                         ->remember('pharmacies', 3600, fn() => \App\Models\Pharmacy::pluck('pharmacy_name', 'id')))
@@ -48,24 +44,40 @@ class OrderResource extends Resource
                 TextInput::make('pharmacy_address')
                     ->label('Pharmacy address')
                     ->disabled()
-                    ->afterStateHydrated(fn($set, $record) => $set('pharmacy_address', $record->pharmacy?->pharmacy_address)
-                    ),
+                    ->afterStateHydrated(fn($set, $record) => $set('pharmacy_address', $record->pharmacy?->pharmacy_address)),
 
                 TextInput::make('pharmacy_phone')
                     ->label('Pharmacy phone')
                     ->disabled()
-                    ->afterStateHydrated(fn($set, $record) => $set('pharmacy_phone', $record->pharmacy?->pharmacy_phone)
-                    ),
+                    ->searchable()
+                    ->afterStateHydrated(fn($set, $record) => $set('pharmacy_phone', $record->pharmacy?->pharmacy_phone)),
 
                 TextInput::make('pharmacy_owner')
                     ->label('Pharmacy owner')
                     ->disabled()
-                    ->afterStateHydrated(fn($set, $record) => $set('pharmacy_owner', $record->pharmacy?->owner?->name)
-                    ),
+                    ->searchable()
+                    ->afterStateHydrated(fn($set, $record) => $set('pharmacy_owner', $record->pharmacy?->owner?->name)),
 
-                select::make('status')
+                Select::make('status')
                     ->label('Order status')
-                    ->options(['pending', 'approved', 'rejected', 'delivered', 'canceled']),
+                    ->options([
+                        'pending' => 'Pending',
+                        'approved' => 'Approved',
+                        'rejected' => 'Rejected',
+                        'delivered' => 'Delivered',
+                        'canceled' => 'Canceled',
+                    ]),
+
+                TextInput::make('total_price')
+                    ->label('Total Price')
+                    ->disabled(),
+
+                TextInput::make('paid')
+                    ->afterStateUpdated(function ($state, $set, $get) {
+                        $set('remaining', $get('total_price') - $state);
+                    }),
+
+                TextInput::make('remaining')->dehydrated(),
             ]);
     }
 
@@ -74,50 +86,55 @@ class OrderResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')->color(Color::Cyan)->alignLeft(),
+
                 Tables\Columns\TextColumn::make('order_num')
                     ->sortable()
                     ->searchable()
                     ->alignLeft()
-                    ->color(Color::Red)
-                    ->bulleted('0')
-                    ->alignLeft(),
+                    ->color(Color::Red),
+
                 Tables\Columns\TextColumn::make('pharmacy.pharmacy_name')->alignLeft(),
                 Tables\Columns\TextColumn::make('pharmacy.pharmacy_address')->label('Pharmacy address')->alignLeft(),
                 Tables\Columns\TextColumn::make('pharmacy.pharmacy_phone')->label('Pharmacy phone')->alignLeft(),
                 Tables\Columns\TextColumn::make('pharmacy.owner.name')->label('Pharmacy Owner')->alignLeft(),
                 Tables\Columns\TextColumn::make('user.name')->label('From')->alignLeft(),
-                Tables\Columns\SelectColumn::make('status')
-                    ->label('Status')
-                    ->options([
-                        'pending'   => 'Pending',
-                        'approved'  => 'Approved',
-                        'rejected'  => 'Rejected',
-                        'delivered' => 'Delivered',
-                        'canceled'  => 'Canceled',
-                    ])
-                    ->alignLeft(),
 
+                    Tables\Columns\SelectColumn::make('status')
+                        ->label('Status')
+                        ->options([
+                            'pending'   => 'Pending',
+                            'approved'  => 'Approved',
+                            'rejected'  => 'Rejected',
+                            'delivered' => 'Delivered',
+                            'canceled'  => 'Canceled',
+                        ])
+                        ->alignLeft()
+                    ->sortable()
+                    ->searchable(),
 
+                Tables\Columns\TextColumn::make('total_price')->money('usd')->color(Color::Cyan)->alignLeft(),
 
-                Tables\Columns\TextColumn::make('total_price') ->money('usd')->color(Color::Cyan)->alignLeft(),
+                Tables\Columns\TextInputColumn::make('paid')
+                    ->afterStateUpdated(function ($state, $set, $get) {
+                        $set('remaining', $get('total_price') - $state);
+                    }),
+
+                Tables\Columns\TextColumn::make('remaining')->badge('Sky'),
             ])
-            ->filters([
-        //
-    ])
-        ->actions([
-            Tables\Actions\EditAction::make()->slideOver(),
-        ])
-        ->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]),
-        ]);
+            ->actions([
+                Tables\Actions\EditAction::make()->slideOver()->label('Content'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            ItemsRelationManager::class
+            ItemsRelationManager::class,
         ];
     }
 

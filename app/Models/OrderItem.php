@@ -34,4 +34,18 @@ class OrderItem extends Model
     {
         return $this->belongsTo(User::class);
     }
+    protected static function booted()
+    {
+        static::saved(function ($orderItem) {
+            $order = $orderItem->order;
+            $order->total_price = $order->items()->sum('total_price');
+            $order->save();
+        });
+
+        static::deleted(function ($orderItem) {
+            $order = $orderItem->order;
+            $order->total_price = $order->items()->sum('total_price');
+            $order->save();
+        });
+    }
 }
