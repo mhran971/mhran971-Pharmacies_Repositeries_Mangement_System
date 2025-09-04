@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->text('titer');
             $table->text('packaging');
             $table->text('pharmaceutical_form_id');
+            $table->string('code')->nullable();
 //                ->constrained('pharmaceutical_form')->casecadeonupdate()->casecadeondelete();
             $table->timestamps();
         });

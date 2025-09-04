@@ -16,6 +16,7 @@ class Medicine extends Model
         'titer',
         'packaging',
         'pharmaceutical_form_id',
+        'code',
     ];
     public $timestamps = false;
 

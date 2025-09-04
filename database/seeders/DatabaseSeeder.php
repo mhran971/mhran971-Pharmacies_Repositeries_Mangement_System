@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             LaboratorySeeder::class,
         ]);
 
-        $excelPath = storage_path('app/public/MedicineExcel/medicines.xlsx');
+        $excelPath = storage_path('app/public/MedicineExcel/medicine.xlsx');
         $this->command->info('   Medicines Importing...');
         Excel::import(new MedicinesImport, $excelPath);
 
