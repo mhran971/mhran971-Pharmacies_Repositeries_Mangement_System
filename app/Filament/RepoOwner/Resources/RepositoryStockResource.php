@@ -14,41 +14,43 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RepositoryStockResource extends Resource
 {
     protected static ?string $model = RepositoryStock::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
-    protected static ?string $navigationLabel = 'Repository Stocks';
-    protected static ?string $pluralLabel = 'Repository Stocks';
-    protected static ?string $label = 'Repository Stock';
+    protected static ?string $navigationLabel = 'My Stocks';
+    protected static ?string $pluralLabel = 'My Stocks';
+    protected static ?string $label = 'My Stock';
+    protected static  $macros = 'My Stock';
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         $user = Auth::user();
 
         return parent::getEloquentQuery()
-//            ->whereIn('status', ['pending', 'approved', 'rejected', 'delivered'])
             ->when($user && $user->repoowner, function ($query) use ($user) {
                 $query->where('repository_id', $user->repoowner->id);
             });
     }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('medicine_id')
-                    ->relationship('medicine', 'name')
+                Forms\Components\Select::make('medicine.trade_name')
+                    ->relationship('medicine', 'trade_name')
                     ->searchable()
                     ->required()
                     ->label('Medicine'),
 
-                Forms\Components\Select::make('repository_id')
-                    ->relationship('repository', 'name')
-                    ->searchable()
-                    ->required()
-                    ->label('Repository'),
+//                Forms\Components\Select::make('repository_id')
+//                    ->relationship('repository', 'name')
+//                    ->searchable()
+//                    ->required()
+//                    ->label('Repository'),
 
                 Forms\Components\TextInput::make('quantity')
                     ->numeric()
@@ -78,26 +80,35 @@ class RepositoryStockResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->striped()
+            ->selectable()
+            ->heading('My Stock')
+//            ->description('Manage your Stock here.')
+//            ->poll('1s')
+
+            ->groups([
+                'medicine.trade_name',
+                'pharmacy.pharmacy_name',
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->sortable()
                     ->label('ID'),
 
-                Tables\Columns\TextColumn::make('medicine.name')
+                Tables\Columns\TextColumn::make('medicine.trade_name')
                     ->label('Medicine')
+                    ->badge('sky')
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('repository.name')
-                    ->label('Repository')
-                    ->sortable()
-                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('quantity')
-                    ->label('Quantity'),
+                    ->label('Quantity')->color('danger'),
 
                 Tables\Columns\TextColumn::make('batch')
-                    ->label('Batch'),
+                    ->label('Batch')
+                    ->sortable()
+                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('Purchase_price')
                     ->money('USD', true)
@@ -123,8 +134,8 @@ class RepositoryStockResource extends Resource
                     ),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()->slideOver(),
+                Tables\Actions\EditAction::make()->slideOver(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

@@ -23,16 +23,16 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
-    {
-        $user = Auth::user();
-
-        return parent::getEloquentQuery()
-            ->whereIn('status', ['pending', 'approved', 'rejected', 'delivered'])
-            ->when($user && $user->repoowner, function ($query) use ($user) {
-                $query->where('repository_id', $user->repoowner->id);
-            });
-    }
+//    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+//    {
+//        $user = Auth::user();
+//
+//        return parent::getEloquentQuery()
+//            ->whereIn('status', ['pending', 'approved', 'rejected', 'delivered'])
+//            ->when($user && $user->repoowner, function ($query) use ($user) {
+//                $query->where('repository_id', $user->repoowner->id);
+//            });
+//    }
 
     public static function form(Form $form): Form
     {
@@ -100,6 +100,10 @@ class OrderResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->heading('Orders')
+//             ->description('Manage your orders here.')
+            ->poll('1s')
+
             ->groups([
                 'pharmacy.pharmacy_name',
                 'user.name',
