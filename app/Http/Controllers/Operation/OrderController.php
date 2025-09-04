@@ -117,11 +117,13 @@ class OrderController extends BaseController
         $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
 
         $order = Order::with('items')->findOrFail($id);
-        $order->items()->delete();
-        $order->delete();
+        if(in_array($order->status, ['canceled', 'delivered', 'pending'])) {
+            $order->items()->delete();
+            $order->delete();
 
 
-        return response()->json(['order has deleted successfully ' => true]);
+        return response()->json(['order has deleted successfully ' => true]);}
+        else return response()->json(["you can't delete an order in {$order->status} status " => false]);
     }
 
 }
