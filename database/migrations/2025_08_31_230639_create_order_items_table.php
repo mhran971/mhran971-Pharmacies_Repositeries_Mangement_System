@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->string('batch')->nullable();
             $table->decimal('Purchase_price', 10, 2)->nullable();
+            $table->decimal('total_price', 12, 2)->nullable();
             $table->date('expiration_date')->nullable();
             $table->timestamps();
         });

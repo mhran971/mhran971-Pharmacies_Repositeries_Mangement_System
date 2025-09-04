@@ -11,8 +11,9 @@ class OrderItem extends Model
         'medicine_id',
         'quantity',
         'batch',
-        'Purchase_price',
+        'purchase_price',
         'expiration_date',
+        'total_price',
     ];
 
     public function order()
@@ -23,5 +24,14 @@ class OrderItem extends Model
     public function medicine()
     {
         return $this->belongsTo(Medicine::class);
+    }
+    public function pharmacy()
+    {
+        return $this->belongsTo(Pharmacy::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

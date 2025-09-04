@@ -68,7 +68,7 @@ class OrderController extends BaseController
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
+        $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacies?->id;
 
         $query = Order::with('items.medicine');
         $query->where('pharmacy_id', $pharmacyId);

@@ -20,7 +20,7 @@ class PermissionResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return auth()->check() && auth()->user()->email === 'adminMahran@email.com';
+        return auth()->check() && auth()->user()->email === 'mas12a@email.com';
     }
 
     public static function form(Form $form): Form
