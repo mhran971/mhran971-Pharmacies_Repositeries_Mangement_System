@@ -64,8 +64,8 @@ class MedicineResource extends Resource
             // ->description('Manage your Medicine here.')
             //->poll('1s')
             ->groups([
-                'laboratory.name',
-                'pharmaceuticalForm.name',
+                'laboratory.name_en',
+                'pharmaceuticalForm.name_en',
             ])
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('ID')->sortable()->searchable(),

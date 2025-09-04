@@ -59,24 +59,8 @@ class ItemsRelationManager extends RelationManager
 //                }),
                 TextInput::make('total_price')
                     ->label('Total Price')
-                    ->disabled(),
 
-                TextInput::make('paid')
-                    ->afterStateUpdated(function ($state, $set, $get) {
-                        $set('remaining', $get('total_price') - $state);
-                    }),
-
-                TextInput::make('remaining')->disabled(),
-            ])
-            ->afterSave(function ($record, $data) {
-                // $record هنا هو Order model بعد الحفظ
-                $total = $record->items()->sum(fn($item) => $item->quantity * $item->price);
-                $record->update([
-                    'total_price' => $total,
-                    // إذا أردت، يمكنك إعادة حساب remaining هنا أيضًا
-                    'remaining'   => $total - $record->paid,
-                ]);
-            });
+            ]);
     }
 
     public function table(Table $table): Table
