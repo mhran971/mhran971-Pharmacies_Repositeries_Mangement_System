@@ -45,7 +45,7 @@ class OrderController extends BaseController
     public function updateOrderStatus(Request $request,  $order_id)
     {
         $request->validate([
-            'status' => 'required|in:pending,approved,rejected ,delivered,canceled'
+            'status' => 'required|in:canceled'
         ]);
         $user = Auth::user();
         if (!$user) {
@@ -91,6 +91,37 @@ class OrderController extends BaseController
 
 
         return response()->json($query);
+    }
+    public function get_order_status_perId($id)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacies?->id;
+
+        $query = Order::where('pharmacy_id', $pharmacyId)->value('status');
+
+
+        return response()->json($query);
+    }
+
+ public function delete_order($id)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $pharmacyId = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
+
+        $order = Order::with('items')->findOrFail($id);
+        $order->items()->delete();
+        $order->delete();
+
+
+        return response()->json(['order has deleted successfully ' => true]);
     }
 
 }

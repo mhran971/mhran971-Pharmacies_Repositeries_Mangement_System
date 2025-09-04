@@ -18,4 +18,7 @@ class Repository extends Model
     {
         return $this->belongsToMany(User::class, 'repository_users');
     }
+    public function owner(){
+        return $this->belongsTo(User::class);
+    }
 }

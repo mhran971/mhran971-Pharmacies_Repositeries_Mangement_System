@@ -97,6 +97,8 @@ Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
 Route::middleware('auth:api')->prefix('Pharmacy/Order')->controller(OrderController::class)->group(function () {
     Route::get('/my-Order',  'myOrder');
     Route::get('/get-orderItems/{id}',  'get_order_perId');
+    Route::get('/order-status/{id}',  'get_order_status_perId');
+    Route::post('/delete-order/{id}',  'delete_order');
     Route::post('/demand-Order',  'demand_Order');
     Route::post('/updateOrderStatus/{id}' , 'updateOrderStatus');
 
@@ -165,6 +167,12 @@ Route::get('/getforms', function () {
 Route::get('/getcompanies', function () {
     return $laboratories = \App\Models\laboratory::query()
         ->select('id', 'name_ar', 'name_en', 'image_path')
+        ->get();
+
+});
+
+Route::get('/repositories', function () {
+    return $laboratories = \App\Models\Repository::query()->with('owner')
         ->get();
 
 });
