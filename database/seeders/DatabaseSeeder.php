@@ -12,12 +12,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RoleSeeder::class,
-            UserSeeder::class,
-            RepositorySeeder::class,
-            RepositoryUserSeeder::class,
             PermissionsSeeder::class,
-            RepositoryUserPermissionsSeeder::class,
+            RoleSeeder::class,
             Pharmaceutical_FormSeeder::class,
             LaboratorySeeder::class,
         ]);
@@ -27,14 +23,10 @@ class DatabaseSeeder extends Seeder
         Excel::import(new MedicinesImport, $excelPath);
 
         $this->call([
-            RoleSeeder::class,
             UserSeeder::class,
             RepositorySeeder::class,
             RepositoryUserSeeder::class,
-            PermissionsSeeder::class,
             RepositoryUserPermissionsSeeder::class,
-            Pharmaceutical_FormSeeder::class,
-            LaboratorySeeder::class,
             PharmacySeeder::class,
             PharmacyUserSeeder::class,
             InvoiceSeeder::class,
