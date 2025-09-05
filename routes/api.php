@@ -116,10 +116,10 @@ Route::middleware('auth:api')->prefix('Pharmacy/Inventory')
 
         Route::get('/dailySales-Chart', 'dailySalesChart');
         Route::get('/weeklySales-Chart', 'weeklySalesChart');
-    Route::get('/monthlySales-Chart', 'monthlySalesChart');
+        Route::get('/monthlySales-Chart', 'monthlySalesChart');
 
 
-});
+    });
 
 /*                =============================
                   ||        General API         ||
@@ -197,4 +197,22 @@ Route::get('/get/medbylaboratory_id/{laboratory_id}', function (string $laborato
 Route::get('/get/medbyForm_id/{Pharmaceutical_Form_id}', function (string $Pharmaceutical_Form_id) {
     return $allMedicines = \App\Models\Medicine::query()->with('laboratory')
         ->where('Pharmaceutical_Form_id', $Pharmaceutical_Form_id)->get();
+});
+/////////////////////////////////////////
+/// Supplement-Interaction-Alternative///
+/////////////////////////////////////////
+Route::get('/alternative-medicine', function () {
+    return $alternative_medicine = \App\Models\Alternative::query()
+        ->select('id', 'medicine_id', 'alternative_medicine_id')
+        ->get();
+
+});
+Route::get('/interaction-medicine', function () {
+    return $interaction_medicine = \App\Models\Interaction::query()
+        ->select('id', 'medicine_id_1', 'medicine_id_2')
+        ->get();
+});
+Route::get('/Supplement-medicine', function () {
+    return $Supplement_medicine = \App\Models\Supplement::query()->select('id', 'medicine_id', 'description')
+        ->get();
 });

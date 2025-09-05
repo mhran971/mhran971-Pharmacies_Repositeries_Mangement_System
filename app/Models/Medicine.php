@@ -34,4 +34,25 @@ class Medicine extends Model
     {
         return $this->hasMany(Batch::class);
     }
+
+    public function alternatives()
+    {
+        return $this->hasMany(Alternative::class, 'medicine_id');
+    }
+
+    public function alternativeFor()
+    {
+        return $this->hasMany(Alternative::class, 'alternative_medicine_id');
+    }
+
+    public function interactionsAsMedicine1()
+    {
+        return $this->hasMany(Interaction::class, 'medicine_id_1');
+    }
+
+    public function interactionsAsMedicine2()
+    {
+        return $this->hasMany(Interaction::class, 'medicine_id_2');
+    }
+
 }
