@@ -3,7 +3,6 @@
 use App\Http\Controllers\Operation\InventoryController;
 use App\Http\Controllers\Operation\OrderController;
 use App\Http\Controllers\Operation\PharmacyStockController;
-use App\Http\Controllers\Operation\SalesMovementController;
 use App\Http\Controllers\Pharmacy\Auth\ForgotPasswordController;
 use App\Http\Controllers\Pharmacy\Auth\PharmacyAuthController;
 use App\Http\Controllers\Pharmacy\Authorization\PharmacyAuthorizationController;
@@ -11,6 +10,8 @@ use App\Http\Controllers\Pharmacy\Profile\ProfileController;
 use App\Http\Controllers\Repository\Auth\RepositoryAuthController;
 use App\Http\Controllers\Repository\Authorization\RepoAuthorizationController;
 use App\Http\Controllers\Repository\Profile\RepoProfileController;
+use App\Http\Middleware\AddEmployeeMiddleware;
+use App\Http\Middleware\DeleteEmployeeMiddleware;
 use App\Models\Medicine;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +29,7 @@ Route::prefix('Repository')
         Route::post('/login', 'login');
     });
 
-Route::prefix('Repository')->middleware('auth:api')->group(function () {
+Route::prefix('Repository')->withoutMiddleware('auth:api')->group(function () {
     Route::post('/logout', [RepositoryAuthController::class, 'logout']);
     Route::get('/my-profile', [RepoProfileController::class, 'get_my_profile']);
     Route::post('/update-profile', [RepoProfileController::class, 'edit_my_profile']);
@@ -77,44 +78,44 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
     ->controller(PharmacyAuthorizationController::class)->group(function () {
         Route::get('/get-permissions/{lang}', 'get_all_permissions');
         Route::get('/all-users', 'get_all_users');
-        Route::get('/My-Pharmacists', 'My_Pharmacists');
-        Route::get('/My_Pharmacist-with-Permissions', 'My_PharmacistwithPermissions');
-        Route::post('/delete-MyPharmacist/{id}', 'delete_MyPharmacists');
+        Route::get('/My-Pharmacists', 'My_Pharmacists')->withoutMiddleware(\App\Http\Middleware\ViewAllEmployeeMiddleware::class);
+        Route::get('/My_Pharmacist-with-Permissions', 'My_PharmacistwithPermissions')->withoutMiddleware(\App\Http\Middleware\ViewAllEmployeeMiddleware::class);
+        Route::post('/delete-MyPharmacist/{id}', 'delete_MyPharmacists')->withoutMiddleware(DeleteEmployeeMiddleware::class);
         Route::get('/get-permissions/Pharmacist/{id}', 'My_Pharmacist_Permissions');
         Route::get('/get-MyPermissions', 'get_MyPermissions');
-        Route::post('/assignOrUpdate-Permissions/{user_id}', 'assignOrUpdatePermissions');
+        Route::post('/assignOrUpdate-Permissions/{user_id}', 'assignOrUpdatePermissions')->withoutMiddleware(AddEmployeeMiddleware::class);
     });
 
 Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
-    Route::get('/pharmacy-stocks', [PharmacyStockController::class, 'pharmacy_stock']);
-    Route::get('/pharmacy-stocks/expiring', [PharmacyStockController::class, 'expiringSoon']);
-    Route::get('/pharmacy-stocks/lowStock', [PharmacyStockController::class, 'lowStock']);
-    Route::post('/sell/bulkStore', [SalesMovementController::class, 'bulkStore']);
-    Route::post('/pharmacy-stocks/add-medicines', [PharmacyStockController::class, 'Add_To_stock']);
-    Route::post('/pharmacy-stocks/returned_medicine', [PharmacyStockController::class, 'Returned_Medicine']);
+    Route::get('/pharmacy-stocks', [PharmacyStockController::class, 'pharmacy_stock'])->withoutMiddleware(\App\Http\Middleware\ViewPharmacyStocksMiddleware::class);
+    Route::get('/pharmacy-stocks/expiring', [PharmacyStockController::class, 'expiringSoon'])->withoutMiddleware(\App\Http\Middleware\ViewNoticeBeforeExpirationMiddleware::class);
+    Route::post('/pharmacy-stocks/add-medicines', [PharmacyStockController::class, 'Add_To_stock'])->withoutMiddleware(\App\Http\Middleware\AddMedicineMiddleware::class);
+    Route::post('/pharmacy-stocks/returned_medicine', [PharmacyStockController::class, 'Returned_Medicine'])->withoutMiddleware(\App\Http\Middleware\ReturnMedicineMiddleware::class);
+
 
 });
 Route::middleware('auth:api')->prefix('Pharmacy/Order')->controller(OrderController::class)->group(function () {
-    Route::get('/my-Order',  'myOrder');
-    Route::get('/get-orderItems/{id}',  'get_order_perId');
-    Route::get('/order-status/{id}',  'get_order_status_perId');
-    Route::post('/delete-order/{id}',  'delete_order');
-    Route::post('/demand-Order',  'demand_Order');
-    Route::post('/updateOrderStatus/{id}' , 'updateOrderStatus');
+    Route::get('/my-Order', 'myOrder')->withoutMiddleware(\App\Http\Middleware\ViewOrdersMiddleware::class);
+    Route::get('/get-orderItems/{id}', 'get_order_perId')->withoutMiddleware(\App\Http\Middleware\ViewOrdersMiddleware::class);
+    Route::get('/order-status/{id}', 'get_order_status_perId')->withoutMiddleware(\App\Http\Middleware\ViewOrdersMiddleware::class);
+    Route::post('/delete-order/{id}', 'delete_order')->withoutMiddleware(\App\Http\Middleware\DeleteOrderMiddleware::class);
+    Route::post('/demand-Order', 'demand_Order')->withoutMiddleware(\App\Http\Middleware\RegisterAnOrderingMiddleware::class);
+    Route::post('/updateOrderStatus/{id}', 'updateOrderStatus')->withoutMiddleware(\App\Http\Middleware\UpdateOrderStatusMiddleware::class);
 
 });
 
-Route::middleware('auth:api')->prefix('Pharmacy/Inventory')->controller( InventoryController::class)->group(function () {
-    Route::get('/daily-Sales', 'dailySalesSummary');
-    Route::get('/weekly-sales', 'weeklySalesSummary');
-    Route::get('/monthly-sales', 'monthlySalesSummary');
+Route::middleware('auth:api')->prefix('Pharmacy/Inventory')
+    ->withoutMiddleware(\App\Http\Middleware\InventoryMiddleware::class)->controller(InventoryController::class)->group(function () {
+        Route::get('/daily-Sales', 'dailySalesSummary');
+        Route::get('/weekly-sales', 'weeklySalesSummary');
+        Route::get('/monthly-sales', 'monthlySalesSummary');
 
-    Route::get('/daily-Profit', 'dailyProfit');
-    Route::get('/weekly-Profit', 'weeklyProfit');
-    Route::get('/monthly-Profit', 'monthlyProfit');
+        Route::get('/daily-Profit', 'dailyProfit');
+        Route::get('/weekly-Profit', 'weeklyProfit');
+        Route::get('/monthly-Profit', 'monthlyProfit');
 
-    Route::get('/dailySales-Chart', 'dailySalesChart');
-    Route::get('/weeklySales-Chart', 'weeklySalesChart');
+        Route::get('/dailySales-Chart', 'dailySalesChart');
+        Route::get('/weeklySales-Chart', 'weeklySalesChart');
     Route::get('/monthlySales-Chart', 'monthlySalesChart');
 
 
@@ -141,6 +142,7 @@ Route::get('/get', function () {
                     'packaging' => $medicine->packaging,
                     'pharmaceutical_form_ar' => $medicine->pharmaceuticalForm?->name_ar ?? 'Unknown',
                     'pharmaceutical_form_en' => $medicine->pharmaceuticalForm?->name_en ?? 'Unknown',
+                    'code' => $medicine->code,
                     'created_at' => $medicine->created_at,
                     'updated_at' => $medicine->updated_at,
                 ];
