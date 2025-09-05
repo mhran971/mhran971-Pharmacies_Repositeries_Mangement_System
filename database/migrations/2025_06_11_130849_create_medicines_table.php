@@ -11,13 +11,13 @@ return new class extends Migration {
         Schema::create('medicines', function (Blueprint $table) {
             $table->id();
             $table->text('trade_name');
-            $table->text('laboratory_id');
+            $table->text('laboratory_id')->nullable();
             //                ->constrained('laboratories')->casecadeonupdate()->casecadeondelete();
 
             $table->text('composition');
             $table->text('titer');
             $table->text('packaging');
-            $table->text('pharmaceutical_form_id');
+            $table->text('pharmaceutical_form_id')->nullable();
             $table->string('code')->nullable();
 //                ->constrained('pharmaceutical_form')->casecadeonupdate()->casecadeondelete();
             $table->timestamps();
