@@ -117,14 +117,16 @@ class OrderResource extends Resource
                     ->alignLeft()
                     ->color(Color::Red),
 
-                Tables\Columns\TextColumn::make('pharmacy.pharmacy_name')->alignLeft()->searchable(),
-                Tables\Columns\TextColumn::make('pharmacy.pharmacy_address')->label('Pharmacy address')->alignLeft()->searchable(),
-                Tables\Columns\TextColumn::make('pharmacy.pharmacy_phone')->label('Pharmacy phone')->alignLeft()->searchable(),
-                Tables\Columns\TextColumn::make('pharmacy.owner.name')->label('Pharmacy Owner')->alignLeft()->searchable(),
-                Tables\Columns\TextColumn::make('user.name')->label('From')->alignLeft()->searchable(),
+                Tables\Columns\TextColumn::make('pharmacy.pharmacy_name')->alignLeft() ->wrap(false)->searchable(),
+                Tables\Columns\TextColumn::make('pharmacy.pharmacy_address')->label('Ph address') ->wrap(false)->alignLeft()->searchable(),
+                Tables\Columns\TextColumn::make('pharmacy.pharmacy_phone')->label('Ph phone') ->wrap(false)->alignLeft()->searchable(),
+                Tables\Columns\TextColumn::make('pharmacy.owner.name')->label('Ph Owner') ->wrap(false)->alignLeft()->searchable(),
+                Tables\Columns\TextColumn::make('user.name')->label('From')->alignLeft() ->wrap(false)->searchable(),
+                Tables\Columns\TextColumn::make('created_at')->date()->label('Date')->alignLeft()->searchable(),
 
                 Tables\Columns\SelectColumn::make('status')
                     ->label('Status')
+                    ->width(1)
                     ->options([
                         'pending' => 'Pending',
                         'approved' => 'Approved',
@@ -136,7 +138,8 @@ class OrderResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('total_price')->money('usd')->color(Color::Cyan)->alignLeft(),
+                Tables\Columns\TextColumn::make('total_price')
+                    ->money('usd')->color(Color::Cyan)->alignLeft(),
 
                 Tables\Columns\TextInputColumn::make('paid')
                     ->beforeStateUpdated(function ($state, $record) {
@@ -145,10 +148,10 @@ class OrderResource extends Resource
                         }
                         $record->remaining = $record->total_price - $state;
                         $record->paid = $state;
-                    }),
+                    })->alignLeft(),
 
 
-                Tables\Columns\TextColumn::make('remaining')->badge('Sky'),
+                Tables\Columns\TextColumn::make('remaining')->badge('Sky')->alignLeft(),
             ])->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([

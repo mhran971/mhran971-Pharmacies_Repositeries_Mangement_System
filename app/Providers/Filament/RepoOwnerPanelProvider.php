@@ -49,8 +49,11 @@ class RepoOwnerPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/RepoOwner/Widgets'), for: 'App\\Filament\\RepoOwner\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+//                Widgets\AccountWidget::class,
+//                Widgets\FilamentInfoWidget::class,
+                \App\Filament\RepoOwner\Widgets\InventoryStatsOverview::class,
+                \App\Filament\RepoOwner\Widgets\InventoryChart::class,
+                \App\Filament\RepoOwner\Widgets\ProfitChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

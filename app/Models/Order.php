@@ -17,6 +17,16 @@ class Order extends Model
         'remaining',
     ];
 
+    protected static function booted()
+    {
+        static::saving(function ($order) {
+             if ($order->paid > $order->total_price) {
+                $order->paid = $order->total_price;
+            }
+
+             $order->remaining = $order->total_price - $order->paid;
+        });
+    }
     public function pharmacy()
     {
         return $this->belongsTo(Pharmacy::class);
