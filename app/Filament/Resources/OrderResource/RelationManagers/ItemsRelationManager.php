@@ -84,18 +84,14 @@ class ItemsRelationManager extends RelationManager
                 Tables\Columns\TextInputColumn::make('purchase_price')
                     ->label('Purchase Price')
                     ->rules(['numeric'])
-                    ->state(fn ($record) => $record->purchase_price) // مهم جداً حتى تبقى القيمة
                     ->afterStateUpdated(function ($state, $record) {
                         $record->update([
                             'purchase_price' => $state,
                             'total_price'    => $state * $record->quantity,
                         ]);
-                    }),
-
-
-
-
-                Tables\Columns\TextColumn::make('batch')
+                    })->state(fn ($record) => $record->purchase_price)
+                ,
+                Tables\Columns\TextInputColumn::make('batch')
                     ->label('Batch'),
 
                 Tables\Columns\TextColumn::make('expiration_date')
