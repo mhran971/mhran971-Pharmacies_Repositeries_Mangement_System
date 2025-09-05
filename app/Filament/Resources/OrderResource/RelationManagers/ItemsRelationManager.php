@@ -89,7 +89,7 @@ class ItemsRelationManager extends RelationManager
                             'purchase_price' => $state,
                             'total_price'    => $state * $record->quantity,
                         ]);
-                    })->state(fn ($record) => $record->purchase_price)
+                    })->state(fn($record) => $record->purchase_price)
                 ,
                 Tables\Columns\TextInputColumn::make('batch')
                     ->label('Batch'),
@@ -99,7 +99,7 @@ class ItemsRelationManager extends RelationManager
                     ->date('Y-m-d'),
 
                 Tables\Columns\TextColumn::make('total_price')
-                    ->label('Total Price')->disabled(),
+                    ->label('Total Price')->disabled()->money('USD', true,)->color('primary'),
 
             ])
             ->headerActions([
