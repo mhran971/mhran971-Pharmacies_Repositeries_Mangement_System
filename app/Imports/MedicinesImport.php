@@ -20,8 +20,11 @@ class StringValueBinder extends DefaultValueBinder
             $value = number_format($value, 0, '', '');
         }
 
+        // تنظيف القيمة من أي مسافات أو علامات tabs
+        $value = trim(preg_replace('/[\x00-\x1F\x7F]/u', '', (string)$value));
+
         // إجبار أي قيمة لتصبح نص
-        $cell->setValueExplicit((string) $value, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+        $cell->setValueExplicit($value, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
         return true;
     }
 }
@@ -32,7 +35,7 @@ class MedicinesImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
-        // تنظيف قيمة العمود code
+        // تنظيف العمود code
         $code = isset($row['code']) ? trim($row['code']) : null;
 
         if ($code !== null && stripos($code, 'E') !== false) {
@@ -44,22 +47,27 @@ class MedicinesImport implements ToModel, WithHeadingRow
             $code = 'N/A';
         }
 
-        // جلب الـ Laboratory ID
-        $laboratoryId = Laboratory::where('name_en', trim($row['laboratory_id'] ?? ''))
-            ->orWhere('name_ar', trim($row['laboratory_id'] ?? ''))
+        // تنظيف باقي الأعمدة من المسافات والـ tabs
+        $tradeName = isset($row['trade_name']) ? trim(preg_replace('/[\x00-\x1F\x7F]/u', '', $row['trade_name'])) : null;
+        $composition = isset($row['composition']) ? trim($row['composition']) : null;
+        $titer = isset($row['titer']) ? trim($row['titer']) : null;
+        $packaging = isset($row['packaging']) ? trim($row['packaging']) : null;
+
+        // جلب IDs بطريقة أكثر أماناً
+        $laboratoryId = Laboratory::where('name_en', $row['laboratory_id'] ?? '')
+            ->orWhere('name_ar', $row['laboratory_id'] ?? '')
             ->value('id');
 
-        // جلب الـ Pharmaceutical Form ID
-        $pharmaceuticalFormId = Pharmaceutical_Form::where('name_en', trim($row['pharmaceutical_form_id'] ?? ''))
-            ->orWhere('name_ar', trim($row['pharmaceutical_form_id'] ?? ''))
+        $pharmaceuticalFormId = Pharmaceutical_Form::where('name_en', $row['pharmaceutical_form_id'] ?? '')
+            ->orWhere('name_ar', $row['pharmaceutical_form_id'] ?? '')
             ->value('id');
 
         return new Medicine([
-            'trade_name' => $row['trade_name'] ?? null,
+            'trade_name' => $tradeName,
             'laboratory_id' => $laboratoryId,
-            'composition' => $row['composition'] ?? null,
-            'titer' => $row['titer'] ?? null,
-            'packaging' => $row['packaging'] ?? null,
+            'composition' => $composition,
+            'titer' => $titer,
+            'packaging' => $packaging,
             'pharmaceutical_form_id' => $pharmaceuticalFormId,
             'code' => $code,
         ]);
