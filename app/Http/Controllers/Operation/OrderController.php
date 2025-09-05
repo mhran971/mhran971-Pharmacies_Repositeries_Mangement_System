@@ -58,7 +58,8 @@ class OrderController extends BaseController
             return response()->json(['error' => 'Order not found'], 404);
         }
         $order->update(['status' => $request->status]);
-
+        $order->items()->delete();
+        $order->delete();
         return response()->json($order);
     }
     public function myOrder()
