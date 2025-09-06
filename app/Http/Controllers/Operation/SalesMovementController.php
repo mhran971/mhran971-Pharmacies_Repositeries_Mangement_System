@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Pharmacy\Operations\BulkSalesMovementRequest;
 use App\Models\Invoice;
 use App\Models\PharmacyStock;
+use App\Models\StockMovement;
 use App\Services\Pharmacy\Operation\SalesMovementService as OperationSalesMovementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -124,4 +125,33 @@ class SalesMovementController extends Controller
             }
         }
     }
+
+    public function myinvoices()
+    {
+        $user = Auth::user();
+        $userPharmacy = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
+        return $invoices = Invoice::query()->where('pharmacy_id', $userPharmacy)->get();
+    }
+
+    public function Psychiatric_invoices()
+    {
+        $user = Auth::user();
+        $userPharmacy = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
+        return $invoices = Invoice::query()->where('pharmacy_id', $userPharmacy)
+            ->where('Psychiatric', 1)->get();
+    }
+
+    public function deleteInvoices_byTd($invoice_id)
+    {
+        $user = Auth::user();
+        $userPharmacy = $user->pharmacy_owner?->id ?? $user->pharmacy?->id;
+        $invoices_items = StockMovement::query()->where('invoice_id', $invoice_id)->delete();
+        $invoice = Invoice::query()->where('id', $invoice_id)->delete();
+
+        if ($invoices_items && $invoice) {
+
+            return response()->json(['The invoice has deleted successfully ' => true]);
+        } else return response()->json(["error at deleting this invoice !" => false]);
+    }
+
 }

@@ -91,6 +91,10 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
 Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
     Route::get('/pharmacy-stocks', [PharmacyStockController::class, 'pharmacy_stock'])->withoutMiddleware(\App\Http\Middleware\ViewPharmacyStocksMiddleware::class);
     Route::post('/sell/bulkStore', [SalesMovementController::class, 'bulkStore'])->withoutMiddleware(\App\Http\Middleware\CreateInvoicesMiddleware::class);
+    Route::get('/my-invoices', [SalesMovementController::class, 'myinvoices'])->withoutMiddleware(\App\Http\Middleware\CreateInvoicesMiddleware::class);
+    Route::get('/my-invoices', [SalesMovementController::class, 'myinvoices'])->withoutMiddleware(\App\Http\Middleware\CreateInvoicesMiddleware::class);
+    Route::get('/my-Psychiatric_invoices', [SalesMovementController::class, 'Psychiatric_invoices'])->withoutMiddleware(\App\Http\Middleware\CreateInvoicesMiddleware::class);
+    Route::post('/delete_invoices_byId/{id}', [SalesMovementController::class, 'deleteInvoices_byTd'])->withoutMiddleware(\App\Http\Middleware\CreateInvoicesMiddleware::class);
     Route::get('/pharmacy-stocks/expiring', [PharmacyStockController::class, 'expiringSoon'])->withoutMiddleware(\App\Http\Middleware\ViewNoticeBeforeExpirationMiddleware::class);
     Route::get('/pharmacy-stocks/lowStock', [PharmacyStockController::class, 'lowStock'])->withoutMiddleware(\App\Http\Middleware\ViewNoticeBeforeStockRunsOutMiddleware::class);
     Route::post('/pharmacy-stocks/add-medicines', [PharmacyStockController::class, 'Add_To_stock'])->withoutMiddleware(\App\Http\Middleware\AddMedicineMiddleware::class);
@@ -228,7 +232,7 @@ Route::get('/test-notification', function () {
     $title = "Pharmes";
     $description = "hi";
 
-    $response = $notificationService->sendNotification($fcm, $title, $description);
+    $response = $notificationService->sendNotification($title, $description);
 
     return response()->json([
         'message' => 'Notification has been sent',
