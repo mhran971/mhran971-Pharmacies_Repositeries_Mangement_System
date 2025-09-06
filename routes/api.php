@@ -211,17 +211,18 @@ Route::get('/get/medbyForm_id/{Pharmaceutical_Form_id}', function (string $Pharm
 /////////////////////////////////////////
 Route::get('/alternative-medicine', function () {
     return $alternative_medicine = \App\Models\Alternative::query()
-        ->select('id', 'medicine_id', 'alternative_medicine_id')
+//        ->select('id', 'medicine_id', 'alternative_medicine_id')
         ->get();
 
 });
 Route::get('/interaction-medicine', function () {
     return $interaction_medicine = \App\Models\Interaction::query()
-        ->select('id', 'medicine_id_1', 'medicine_id_2')
+//        ->select('id', 'medicine_id_1', 'medicine_id_2')
         ->get();
 });
 Route::get('/Supplement-medicine', function () {
-    return $Supplement_medicine = \App\Models\Supplement::query()->select('id', 'medicine_id', 'description')
+    return $Supplement_medicine = \App\Models\Supplement::query()
+//        ->select('id', 'medicine_id', 'description')
         ->get();
 });
 /////////////////////////////////////////
@@ -231,8 +232,8 @@ Route::get('/test-notification', function () {
     $fcm = 'fG9hNCPbTdmKyaEnStCuC0:APA91bHXkcYollGGOalt-SGqprEUqbG-SKIPE_bvikzOJ3JH1d4n_2_SGSHvwLUTjJhDOoOlhweTcNmu8Q4umoLTP7woAkWXfSkRsgqM3oIoLzzA58h4Z_8';
     $title = "Pharmes";
     $description = "hi";
-
-    $response = $notificationService->sendNotification($title, $description);
+    $data = ['extra' => 'hhhhhhhhhhh'];
+    $response = $notificationService->sendNotification($fcm, $title, $description);
 
     return response()->json([
         'message' => 'Notification has been sent',
