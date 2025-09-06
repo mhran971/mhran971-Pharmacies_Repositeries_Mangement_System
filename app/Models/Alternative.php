@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Alternative extends Model
 {
     public $timestamps = false;
-    protected $fillable = ['medicine_id', 'alternative_medicine_id'];
+    protected $fillable = ['medicine_id_1', 'medicine_id_2'];
 
     public function medicine()
     {

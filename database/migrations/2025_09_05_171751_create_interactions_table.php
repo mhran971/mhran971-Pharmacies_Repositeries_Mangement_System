@@ -12,7 +12,14 @@ return new class extends Migration {
     {
         Schema::create('interactions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('medicine_id_1');
+            $table->unsignedBigInteger('medicine_id_2');
             $table->timestamps();
+            $table->dropColumn(['created_at', 'updated_at']);
+
+
+            $table->foreign('medicine_id_1')->references('id')->on('medicines')->onDelete('cascade');
+            $table->foreign('medicine_id_2')->references('id')->on('medicines')->onDelete('cascade');
         });
     }
 
