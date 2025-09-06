@@ -3,6 +3,7 @@
 use App\Http\Controllers\Operation\InventoryController;
 use App\Http\Controllers\Operation\OrderController;
 use App\Http\Controllers\Operation\PharmacyStockController;
+use App\Http\Controllers\Operation\SalesMovementController;
 use App\Http\Controllers\Pharmacy\Auth\ForgotPasswordController;
 use App\Http\Controllers\Pharmacy\Auth\PharmacyAuthController;
 use App\Http\Controllers\Pharmacy\Authorization\PharmacyAuthorizationController;
@@ -14,8 +15,6 @@ use App\Http\Middleware\AddEmployeeMiddleware;
 use App\Http\Middleware\DeleteEmployeeMiddleware;
 use App\Models\Medicine;
 use App\Services\GeneralServices\NotificationService;
-use Google\Client as GoogleClient;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*                =============================
@@ -91,6 +90,7 @@ Route::middleware(['auth:api'])->prefix('Pharmacy')
 
 Route::middleware('auth:api')->prefix('Pharmacy')->group(function () {
     Route::get('/pharmacy-stocks', [PharmacyStockController::class, 'pharmacy_stock'])->withoutMiddleware(\App\Http\Middleware\ViewPharmacyStocksMiddleware::class);
+    Route::post('/sell/bulkStore', [SalesMovementController::class, 'bulkStore'])->withoutMiddleware(\App\Http\Middleware\CreateInvoicesMiddleware::class);
     Route::get('/pharmacy-stocks/expiring', [PharmacyStockController::class, 'expiringSoon'])->withoutMiddleware(\App\Http\Middleware\ViewNoticeBeforeExpirationMiddleware::class);
     Route::get('/pharmacy-stocks/lowStock', [PharmacyStockController::class, 'lowStock'])->withoutMiddleware(\App\Http\Middleware\ViewNoticeBeforeStockRunsOutMiddleware::class);
     Route::post('/pharmacy-stocks/add-medicines', [PharmacyStockController::class, 'Add_To_stock'])->withoutMiddleware(\App\Http\Middleware\AddMedicineMiddleware::class);
@@ -220,73 +220,21 @@ Route::get('/Supplement-medicine', function () {
     return $Supplement_medicine = \App\Models\Supplement::query()->select('id', 'medicine_id', 'description')
         ->get();
 });
-Route::get('/testnotification', function () {
-    $notificationService = new NotificationService();
-    $notificationService->send('Pharmes', "hi !");
-
-});
+/////////////////////////////////////////
 Route::get('/test-notification', function () {
+    $notificationService = new NotificationService();
 
-    $fcm = "DEVICE_FCM_TOKEN";
-
+    $fcm = 'fG9hNCPbTdmKyaEnStCuC0:APA91bHXkcYollGGOalt-SGqprEUqbG-SKIPE_bvikzOJ3JH1d4n_2_SGSHvwLUTjJhDOoOlhweTcNmu8Q4umoLTP7woAkWXfSkRsgqM3oIoLzzA58h4Z_8';
     $title = "Pharmes";
     $description = "hi";
 
-//    $credentialsFilePath = "json/file.json";  // local
-    $credentialsFilePath = Http::get(asset('json/google-services.json')); // in server
-    $client = new GoogleClient();
-    $client->setAuthConfig($credentialsFilePath);
-    $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-    $client->refreshTokenWithAssertion();
-    $token = $client->getAccessToken();
+    $response = $notificationService->sendNotification($fcm, $title, $description);
 
-    $access_token = $token['access_token'];
+    return response()->json([
+        'message' => 'Notification has been sent',
+        'response' => $response
+    ]);
+});
 
-    $headers = [
-        "Authorization: Bearer $access_token",
-        'Content-Type: application/json'
-    ];
+/////////////////////////////////////////
 
-    $data = [
-        "message" => [
-            "token" => $fcm,
-            "notification" => [
-                "title" => $title,
-                "body" => $description,
-            ],
-        ]
-    ];
-    $payload = json_encode($data);
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/v1/projects/project_id/messages:send');
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-    curl_setopt($ch, CURLOPT_VERBOSE, true); // Enable verbose output for debugging
-    $response = curl_exec($ch);
-    $err = curl_error($ch);
-    curl_close($ch);
-
-    if ($err) {
-        return response()->json([
-            'message' => 'Curl Error: ' . $err
-        ], 500);
-    } else {
-        return response()->json([
-            'message' => 'Notification has been sent',
-            'response' => json_decode($response, true)
-        ]);
-    }
-})->name('testnotification');
-
-//7 - Response :
-//{
-//    "message": "Notification has been sent",
-//    "response": {
-//    "name": "projects/project_id/messages/0:1716964946123652%49b35ce849b35ce8"
-//    }
-//}
-//notification is send successfully
