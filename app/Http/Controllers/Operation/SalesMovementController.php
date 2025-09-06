@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Operation;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pharmacy\Operations\BulkSalesMovementRequest;
-use App\Jobs\UpdatePharmacyStockJob;
 use App\Models\Invoice;
 use App\Models\PharmacyStock;
 use App\Services\Pharmacy\Operation\SalesMovementService as OperationSalesMovementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SalesMovementController extends Controller
 {
@@ -91,7 +91,7 @@ class SalesMovementController extends Controller
                 }
 
                 if (!empty($errors)) {
-                     throw new \Exception();
+                    throw new \Exception(json_encode($errors));
                 }
             });
 
@@ -109,9 +109,19 @@ class SalesMovementController extends Controller
             return response()->json(['data' => $movements], 201);
 
         } catch (\Exception $e) {
-             return response()->json([
-                'message' => 'An error occurred during the process of processing.',
-            ], 500);
+            $errorData = json_decode($e->getMessage(), true);
+            if ($errorData) {
+                return response()->json([
+                    'message' => 'بعض الأدوية غير متوفرة بالكميات المطلوبة.',
+                    'errors' => $errorData,
+                ], 422);
+            } else {
+                Log::error('Bulk store error: ' . $e->getMessage());
+                return response()->json([
+                    'message' => 'An error occurred during the process of processing.',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
         }
     }
 }
