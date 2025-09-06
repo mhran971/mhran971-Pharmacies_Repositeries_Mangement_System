@@ -12,10 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Auth;
-use function Laravel\Prompts\error;
 
 class OrderResource extends Resource
 {
@@ -74,7 +71,7 @@ class OrderResource extends Resource
                         'approved' => 'Approved',
                         'rejected' => 'Rejected',
                         'delivered' => 'Delivered',
-                        'canceled' => 'Canceled',
+//                        'canceled' => 'Canceled',
                     ]),
 
                 TextInput::make('total_price')
