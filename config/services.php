@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'firebase' => [
+        'service_account' => env('FIREBASE_SERVICE_ACCOUNT_PATH', storage_path('app/pharmes-app-21a5cbf86c17.json')),
+    ],
+
 ];

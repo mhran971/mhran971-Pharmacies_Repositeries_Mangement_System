@@ -8,6 +8,7 @@ use App\Http\Requests\Repository\Auth\LoginRequest;
 use App\Http\Resources\UserLoginResource;
 use App\Models\Pharmacy;
 use App\Models\User;
+use App\Services\GeneralServices\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -36,7 +37,8 @@ class AuthService
 
             $token = JWTAuth::fromUser($user);
             User::query()->where('id', $user->id)->update(['token' => $token]);
-
+            $notificationService = new NotificationService();
+            $notificationService->send($user->mac_token, "Hi {$user->name} ", "Welcome in our application");
 
             return [
                 'user' => $user,
@@ -67,7 +69,8 @@ class AuthService
 //            $pharmacy->pharmacists()->attach($user->id);
             $token = JWTAuth::fromUser($user);
             User::query()->where('id', $user->id)->update(['token' => $token]);
-
+            $notificationService = new NotificationService();
+            $notificationService->send($user->mac_token, "Hi {$user->name} ", "Welcome in our application", "Welcome to our application");
             return [
                 'user' => $user,
                 'authorization' => [

@@ -25,6 +25,9 @@ class PharmacyStockSeeder extends Seeder
                     'Purchase_price' => fake()->randomFloat(2, 1, 50),
                     'sale_price' => fake()->randomFloat(2, 51, 100),
                     'expiration_date' => fake()->dateTimeBetween('+1 month', '+1 year')->format('Y-m-d'),
+                    'last_low_stock_notification_at' => fake()->dateTimeBetween('-20 day', '-1 day')->format('Y-m-d h:m:s'),
+                    'last_expired_notification_at' => fake()->dateTimeBetween('-20 day', '-1 day')->format('Y-m-d h:m:s'),
+
                 ]);
             }
         });

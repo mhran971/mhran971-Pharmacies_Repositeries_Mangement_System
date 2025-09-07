@@ -2,6 +2,7 @@
 
 namespace App\Services\GeneralServices;
 
+
 use Kreait\Firebase\Exception\FirebaseException;
 use Kreait\Firebase\Exception\MessagingException;
 use Kreait\Firebase\Factory;
@@ -9,11 +10,12 @@ use Kreait\Firebase\Messaging\CloudMessage;
 
 class NotificationService
 {
+
     protected \Kreait\Firebase\Contract\Messaging $messaging;
 
     public function __construct()
     {
-        $serviceAccountPath = storage_path('app/learningapp-4736c-e9b4b11b72fc.json');
+        $serviceAccountPath = storage_path('app/pharmes-app-21a5cbf86c17.json');
 
         // Initialize the Firebase Factory with the service account
         $factory = (new Factory)->withServiceAccount($serviceAccountPath);
@@ -31,13 +33,14 @@ class NotificationService
      * @throws MessagingException
      * @throws FirebaseException
      */
-    public function send( //$token,
-        $title, $body, $data = []): void
+    public function send($token,
+                         $title, $body, $data = []): void
     {
-        $token = 'cFCIC9hEQGiqDRXxG-0YX9:APA91bF5rXFV17oxRaOR6T5lrorSypCfHEJWsvAhOGfA78qZEYOWA7oSjLrqu2RX7HilEqoBwdyprUUFESq5RvRzsqjinf4YiC5sUSa7bD4qxLSa28KwWuEfCZnwR50braEi75ExjPQL';
+//        $token='fG9hNCPbTdmKyaEnStCuC0:APA91bHXkcYollGGOalt-SGqprEUqbG-SKIPE_bvikzOJ3JH1d4n_2_SGSHvwLUTjJhDOoOlhweTcNmu8Q4umoLTP7woAkWXfSkRsgqM3oIoLzzA58h4Z_8';
         $message = CloudMessage::withTarget('token', $token)
             ->withNotification(['title' => $title, 'body' => $body])
             ->withData($data);
         $this->messaging->send($message);
     }
+
 }

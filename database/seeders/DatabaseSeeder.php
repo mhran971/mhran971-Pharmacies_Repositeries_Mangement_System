@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             AlternativeSeeder::class,
             InteractionSeeder::class,
             SupplementsSeeder::class,
+            OrderSeeder::class
         ]);
     }
 }

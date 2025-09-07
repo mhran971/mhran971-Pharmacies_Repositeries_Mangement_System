@@ -129,7 +129,7 @@ class OrderResource extends Resource
                         'approved' => 'Approved',
                         'rejected' => 'Rejected',
                         'delivered' => 'Delivered',
-                        'canceled' => 'Canceled',
+//                        'canceled' => 'Canceled',
                     ])
                     ->alignLeft()
                     ->sortable()

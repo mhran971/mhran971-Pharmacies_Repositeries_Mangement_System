@@ -230,10 +230,10 @@ Route::get('/test-notification', function () {
     $notificationService = new NotificationService();
 
     $fcm = 'fG9hNCPbTdmKyaEnStCuC0:APA91bHXkcYollGGOalt-SGqprEUqbG-SKIPE_bvikzOJ3JH1d4n_2_SGSHvwLUTjJhDOoOlhweTcNmu8Q4umoLTP7woAkWXfSkRsgqM3oIoLzzA58h4Z_8';
-    $title = "Pharmes";
-    $description = "hi";
-    $data = ['extra' => 'hhhhhhhhhhh'];
-    $response = $notificationService->sendNotification($fcm, $title, $description);
+    $title = "الاخير";
+    $description = "وصل شي";
+    $data = ['extra' => ''];
+    $response = $notificationService->send($fcm, $title, $description);
 
     return response()->json([
         'message' => 'Notification has been sent',

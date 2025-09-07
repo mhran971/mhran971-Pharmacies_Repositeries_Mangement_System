@@ -17,6 +17,8 @@ return new class extends Migration {
             $table->decimal('Purchase_price', 10, 2);
             $table->decimal('sale_price', 10, 2);
             $table->date('expiration_date');
+            $table->timestamp('last_low_stock_notification_at')->nullable();
+            $table->timestamp('last_expired_notification_at')->nullable();
             $table->timestamps();
         });
     }

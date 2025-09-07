@@ -31,7 +31,7 @@ class OrderController extends BaseController
             'pharmacy_id' => $pharmacyId,
             'repository_id' => $request['repository_id'],
             'status' => 'pending',
-            'order_num' => random_int(10000, 99999),
+            'order_num' => 'ORD-' . random_int(10000, 99999),
             'total_price' => 0//collect($request['items'])->sum(fn($item) => $item['quantity'] * ($item['price'] ?? 0)),
         ]);
 
