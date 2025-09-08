@@ -21,7 +21,7 @@ class OrderSeeder extends Seeder
             Order::create([
                 'pharmacy_id' => 10,
                 'user_id' => rand(1, 10),
-                'repository_id' => rand(1, 3),
+                'repository_id' => 21,
                 'order_num' => 'ORD-' . str_pad($i, 5, '0', STR_PAD_LEFT),
                 'status' => ['pending', 'approved', 'rejected', 'delivered'][array_rand(['pending', 'approved', 'rejected', 'delivered'])],
                 'total_price' => $total,
