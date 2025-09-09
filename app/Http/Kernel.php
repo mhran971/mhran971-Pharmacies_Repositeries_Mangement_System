@@ -62,17 +62,15 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // ✅ Middleware الخاص بك
-        'owner.only' => \App\Http\Middleware\OwnerOnly::class,
     ];
 
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
 
-        $schedule
-            ->command('inventory:check-expiry --days=30')
-            ->dailyAt('02:00')
-            ->withoutOverlapping()
-            ->runInBackground();
+        $schedule->command('stock:check-low')
+        ->withoutOverlapping()
+        ->runInBackground()
+        ->everyMinute();
+
     }
 }
