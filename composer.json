@@ -17,7 +17,9 @@
         "tymon/jwt-auth": "*",
         "ext-intl": "*",
         "ext-zip": "*",
-    "ext-gd": "*"
+        "ext-gd": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*"
 },
     "require-dev": {
         "fakerphp/faker": "^1.23",
