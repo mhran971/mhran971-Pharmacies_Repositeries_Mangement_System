@@ -3,6 +3,7 @@
 namespace App\Filament\RepoOwner\Pages\CustomRegister;
 
 use App\Models\Repository;
+use App\Models\Role;
 use App\Models\User;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -59,12 +60,15 @@ class CustomRegister extends Login
     {
         $data = $this->form->getState();
 
+        $role = Role::where('name', 'Repository_Owner')->first();
+
         // Step 1: Create the user
         $user = User::create([
             'name'         => $data['name'],
             'email'        => $data['email'],
             'phone_number' => $data['phone_number'],
             'password'     => Hash::make($data['password']),
+            'role_id'      => $role->id,
         ]);
 
         // Step 2: Login the user
