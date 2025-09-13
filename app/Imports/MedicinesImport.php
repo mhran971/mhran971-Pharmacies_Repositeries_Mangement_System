@@ -77,4 +77,14 @@ class MedicinesImport implements ToModel, WithHeadingRow
     {
         return new StringValueBinder();
     }
+
+    public function chunkSize(): int
+    {
+        return 1000; // process 1000 rows at a time
+    }
+
+    public function batchSize(): int
+    {
+        return 1000; // insert 1000 rows in bulk
+    }
 }
